@@ -1,0 +1,28 @@
+.logs, .menu_but {
+  display: inline-grid;
+}
+
+.log_title {
+  margin-left: 180px;
+  color: red;
+
+}
+
+.logs{
+  margin-left: 18px;
+}
+
+.menu_title {
+  margin-left: 75px;
+  color: red;
+}
+
+.menu_but{
+  margin-left: 100px;
+  display: inline-grid;
+
+}
+
+button {
+  margin-bottom: 15px;
+}

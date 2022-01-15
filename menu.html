@@ -17,7 +17,7 @@
       <div class="header">
         <div class="sp"></div>
         <div class="version">
-          <h4>version: 1.1.3</h4></div>
+          <h4>version: 1.1.4</h4></div>
         <div class="title"></div>
         <div class="btn-turn"><img src="css/img/turn.png" alt="Закрыть"></div>
         <div class="btn-full"><img src="css/img/full.png" alt="Закрыть"></div>
@@ -27,8 +27,8 @@
       <!-- ЗАГОЛОВОК ПРОГРАММЫ -->
       <div class="app-title">
         <div class="sp"></div>
-        <div class="icon"><img src="css/img/icon.png"></div>
-        <div class="app-name">MarketBot</div>
+        <div class="icon"><img style="width:110%;" src="css/img/icon.png"></div>
+        <div class="app-name">Market<span style = "color: #f1f1f1;"> Bot</span></div>
         <div class="sp"></div>
         <div class="logs-title">Главная</div>
       </div>
@@ -51,7 +51,7 @@
             <!-- новости обнов тут -->
             <li class="update_new">
               <h4>v1.1.4</h4>
-              <p>Добавлена возможность переноса баланса между аккаунтами market.csgo.com .</p>
+              <p>Добавлена возможность переноса баланса между аккаунтами market.csgo.com и ограничение Autobuy по балансу .</p>
               <hr>
             <li class="update_new">
               <h4>v1.1.3</h4>
@@ -198,11 +198,14 @@
           </ul>
         </div>
         <div class="func-btn-autobuy">
-          <span>min</span>
+          <span>Мин.</span>
           <input type="text" class="min_percent_autobuy" style="width: 100px; text-align: center;">
           <span class="sp"></span>
-          <span>max</span>
+          <span>Макс.</span>
           <input type="text" class="max_percent_autobuy" style="width: 100px; text-align: center;">
+          <span>Ограничение баланса</span>
+          <input type="text" class="limit_autobuy" style="width: 100px; text-align: center;">
+          <span class="sp"></span>
           <button class="start-autobuy">Старт</button>
           <button class="stop-autobuy">Стоп</button>
         </div>
@@ -221,16 +224,16 @@
       </div>
 
       <!-- Перенос баланса -->
-      <div class="func-send">
+      <div class="func-send" style="display: none;">
         <div class="send-set">
-          <span>Сумма</span>
-          <input type="text" class="count_send" style="width: 300px; text-align: center;">
-          <span>API-key получателя</span>
-          <input type="text" class="api_user" style="width: 300px; text-align: center;">
-          <span>API-key отправителя</span>
-          <input type="text" class="api_own" style="width: 300px; text-align: center;">
-          <span>Платежный пароль</span>
-          <input type="text" class="pay_pass" style="width: 300px; text-align: center;">
+          <span>Сумма</span><br>
+          <input type="text" class="count_send" style="width: 300px; text-align: center;"><br>
+          <span>API-key получателя</span><br>
+          <input type="text" class="api_user" style="width: 300px; text-align: center;"><br>
+          <span>API-key отправителя</span><br>
+          <input type="text" class="api_own" style="width: 300px; text-align: center;"><br>
+          <span>Платежный пароль</span><br>
+          <input type="text" class="pay_pass" style="width: 300px; text-align: center;"><br><br>
           <button class="send_money">Отправить</button>
         </div>
 

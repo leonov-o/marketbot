@@ -6,7 +6,7 @@ const fs = require("fs");
 const puppeteer = require('puppeteer');
 const fetch = require('node-fetch');
 var data_price = false;
-
+const file_settings = 'config.json';
 const SteamCommunity = require('steamcommunity');
 let community = new SteamCommunity();
 var SteamTotp = require("steam-totp");
@@ -84,12 +84,12 @@ function del_settings() {
   // var config;
   // console.log(config);
   // var json = JSON.stringify(config);
-  fs.writeFileSync(remote.app.getPath("userData") + '/config.json', "{}", function() {});
+  fs.writeFileSync(remote.app.getPath("userData") + '/' + file_settings, "{}", function() {});
 }
 
 function save_settings() {
     document.querySelector(".btn-use-settings").disabled = false;
-    var configJson = JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/config.json', "utf8"));
+    var configJson = JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/' + file_settings, "utf8"));
     var login_steam = document.querySelector(".steam-login").value;
     console.log(login_steam);
     console.log(configJson);
@@ -122,7 +122,7 @@ function save_settings() {
       console.log(config);
       var json = JSON.stringify(config);
       console.log(json);
-      fs.writeFileSync(remote.app.getPath("userData") + '/config.json', json, "utf-8", function() {});
+      fs.writeFileSync(remote.app.getPath("userData") + '/' + file_settings, json, "utf-8", function() {});
     }
 
 
@@ -134,7 +134,7 @@ select.addEventListener("change", function(evt) {
 
   var expression = evt.target.value;
   console.log(expression);
-  var configJson = JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/config.json', "utf8"));
+  var configJson = JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/' + file_settings, "utf8"));
   console.log(configJson[""+expression+""]);
   var api_market_set = configJson[""+expression+""]["market_api"];
   var api_steam_set = configJson[""+expression+""]["steam_api"];
@@ -157,7 +157,7 @@ select.addEventListener("change", function(evt) {
 
 async function paste_settings() {
   try{
-     var configJson = await JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/config.json', "utf8"));
+     var configJson = await JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/' + file_settings, "utf8"));
      if (!(configJson == '{}')) {
        document.querySelector(".btn-save-settings").disabled = true;
      }
@@ -171,9 +171,9 @@ async function paste_settings() {
     // var config = '';
     // console.log(config);
     // var json = JSON.stringify(config);
-    fs.writeFileSync(remote.app.getPath("userData") + '/config.json', "{}", function() {});
+    fs.writeFileSync(remote.app.getPath("userData") + '/' + file_settings, "{}", function() {});
 
-    configJson = JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/config.json', "utf8"));
+    configJson = JSON.parse(fs.readFileSync(remote.app.getPath("userData") + '/' + file_settings, "utf8"));
   }
   var keys = Object.keys(configJson);
   for (key in keys) {
@@ -235,12 +235,16 @@ document.querySelector(".btn-autobuy").addEventListener("click", () => {
     menu_pos = 4;
     menu_work();
 });
-document.querySelector(".btn-calc").addEventListener("click", () => {
+document.querySelector(".btn-send").addEventListener("click", () => {
     menu_pos = 5;
     menu_work();
 });
-document.querySelector(".btn-settings").addEventListener("click", () => {
+document.querySelector(".btn-calc").addEventListener("click", () => {
     menu_pos = 6;
+    menu_work();
+});
+document.querySelector(".btn-settings").addEventListener("click", () => {
+    menu_pos = 7;
     menu_work();
 });
 document.querySelector(".refresh-icon").addEventListener("click", () => {
@@ -255,7 +259,7 @@ document.querySelector(".refresh-icon-status").addEventListener("click", () => {
     setTimeout(check_status_market, 2000);
 });
 document.querySelector(".btn-about").addEventListener("click", () => {
-        menu_pos = 7;
+        menu_pos = 8;
         menu_work();
     });
     // РАБОТА КНОПОК МЕНЮ
@@ -267,6 +271,7 @@ function menu_work() {
             document.querySelector(".func-reg-price").style = "display:none;"
             document.querySelector(".func-set-items").style = "display:none;"
             document.querySelector(".func-autobuy").style = "display:none;"
+            document.querySelector(".func-send").style = "display:none;"
             document.querySelector(".func-calc").style = "display:none;"
             document.querySelector(".func-settings").style = "display:none;"
             document.querySelector(".func-about").style = "display:none;"
@@ -277,6 +282,7 @@ function menu_work() {
             document.querySelector(".func-reg-price").style = "display:block;"
             document.querySelector(".func-set-items").style = "display:none;"
             document.querySelector(".func-autobuy").style = "display:none;"
+            document.querySelector(".func-send").style = "display:none;"
             document.querySelector(".func-calc").style = "display:none;"
             document.querySelector(".func-settings").style = "display:none;"
             document.querySelector(".func-about").style = "display:none;"
@@ -287,6 +293,7 @@ function menu_work() {
             document.querySelector(".func-reg-price").style = "display:none;"
             document.querySelector(".func-set-items").style = "display:block;"
             document.querySelector(".func-autobuy").style = "display:none;"
+            document.querySelector(".func-send").style = "display:none;"
             document.querySelector(".func-calc").style = "display:none;"
             document.querySelector(".func-settings").style = "display:none;"
             document.querySelector(".func-about").style = "display:none;"
@@ -297,36 +304,51 @@ function menu_work() {
             document.querySelector(".func-reg-price").style = "display:none;"
             document.querySelector(".func-set-items").style = "display:none;"
             document.querySelector(".func-autobuy").style = "display:block;"
+            document.querySelector(".func-send").style = "display:none;"
             document.querySelector(".func-calc").style = "display:none;"
             document.querySelector(".func-settings").style = "display:none;"
             document.querySelector(".func-about").style = "display:none;"
             break;
         case 5:
+            func_title.textContent = "Перенос баланса";
+            document.querySelector(".func-logs").style = "display:none;"
+            document.querySelector(".func-reg-price").style = "display:none;"
+            document.querySelector(".func-set-items").style = "display:none;"
+            document.querySelector(".func-autobuy").style = "display:none;"
+            document.querySelector(".func-send").style = "display:block;"
+            document.querySelector(".func-calc").style = "display:none;"
+            document.querySelector(".func-settings").style = "display:none;"
+            document.querySelector(".func-about").style = "display:none;"
+            break;
+        case 6:
             func_title.textContent = "Калькулятор выгоды";
             document.querySelector(".func-logs").style = "display:none;"
             document.querySelector(".func-reg-price").style = "display:none;"
             document.querySelector(".func-set-items").style = "display:none;"
             document.querySelector(".func-autobuy").style = "display:none;"
+            document.querySelector(".func-send").style = "display:none;"
             document.querySelector(".func-calc").style = "display:block;"
             document.querySelector(".func-settings").style = "display:none;"
             document.querySelector(".func-about").style = "display:none;"
             break;
-        case 6:
+        case 7:
             func_title.textContent = "Настройки";
             document.querySelector(".func-logs").style = "display:none;"
             document.querySelector(".func-reg-price").style = "display:none;"
             document.querySelector(".func-set-items").style = "display:none;"
             document.querySelector(".func-autobuy").style = "display:none;"
+            document.querySelector(".func-send").style = "display:none;"
             document.querySelector(".func-calc").style = "display:none;"
             document.querySelector(".func-settings").style = "display:block;"
             document.querySelector(".func-about").style = "display:none;"
             break;
-        case 7:
+        case 8:
             func_title.textContent = "О программе";
             document.querySelector(".func-logs").style = "display:none;"
             document.querySelector(".func-reg-price").style = "display:none;"
             document.querySelector(".func-set-items").style = "display:none;"
             document.querySelector(".func-autobuy").style = "display:none;"
+            document.querySelector(".func-send").style = "display:none;"
             document.querySelector(".func-calc").style = "display:none;"
             document.querySelector(".func-settings").style = "display:none;"
             document.querySelector(".func-about").style = "display:block;"
@@ -1008,13 +1030,38 @@ async function loginInTable() {
 async function parseTable() {
     var min_percent = document.querySelector(".min_percent_autobuy").value;
     var max_percent = document.querySelector(".max_percent_autobuy").value;
+    var limit_balance = document.querySelector(".limit_autobuy").value
 
     var csgo_link = "https://table.altskins.com/ru/site/items?ItemsFilter%5Btype%5D=1&ItemsFilter%5BsalesFilter%5D=bs&ItemsFilter%5Bservice1%5D=showtm&ItemsFilter%5Bservice1Minutes%5D=&ItemsFilter%5Bservice1CountFrom%5D=1&ItemsFilter%5Bservice1CountTo%5D=&ItemsFilter%5BsalesFrom%5D=&ItemsFilter%5Bservice2%5D=showsteama&ItemsFilter%5Bservice2Minutes%5D=&ItemsFilter%5Bservice2CountFrom%5D=&ItemsFilter%5Bservice2CountTo%5D=&ItemsFilter%5Btimeout%5D=5&ItemSearch%5Bname_en%5D=&ItemSearch%5Bpricetm_min%5D=0.1&ItemSearch%5Bpricetm_max%5D=&ItemSearch%5Bpricesteama_min%5D=&ItemSearch%5Bpricesteama_max%5D=&ItemSearch%5Btmsteama_min%5D=" + min_percent + "&ItemSearch%5Btmsteama_max%5D=" + max_percent + "&ItemSearch%5Bsteamatm_min%5D=&ItemSearch%5Bsteamatm_max%5D=";
     console.log("min_percent: " + min_percent);
     console.log("max_percent: " + max_percent);
+    console.log("limit_balance: " + limit_balance);
+
 
     await page.goto(csgo_link); //переходим по ссылке  с настройками
     var skins = await page.$$('tr.tr');
+    try {
+      await check_market_bal();
+      var check_bal = document.querySelector(".profile-bal-market").textContent;
+
+      console.log("Balance: " + check_bal.replace(" RUB",''));
+      if (limit_balance >= check_bal.replace(" RUB",'')){//выключение перегона, если достигнут лимит
+        document.querySelector(".start-autobuy").removeAttribute("disabled");
+        document.querySelector(".min_percent_autobuy").removeAttribute("disabled");
+        document.querySelector(".max_percent_autobuy").removeAttribute("disabled");
+        document.querySelector(".limit_autobuy").removeAttribute("disabled");
+
+
+
+        loggingAutobuy("Стоп");
+        await browser.close();
+        clearTimeout(autobuy_timer);
+        return;
+      }
+    } catch (e) {
+
+    }
+
     loggingAutobuy("Поиск предметов");
     for (let i = 0; i < skins.length; i++) {
         var skin_name_sel = await skins[i].$("span.copy");
@@ -1049,6 +1096,8 @@ document.querySelector(".start-autobuy").addEventListener("click" , async () => 
   document.querySelector(".start-autobuy").setAttribute("disabled", "true");
   document.querySelector(".min_percent_autobuy").setAttribute("disabled", "true");
   document.querySelector(".max_percent_autobuy").setAttribute("disabled", "true");
+  document.querySelector(".limit_autobuy").setAttribute("disabled", "true");
+
 
   loggingAutobuy("Старт");
   await loginInSteam();
@@ -1063,6 +1112,9 @@ document.querySelector(".stop-autobuy").addEventListener("click", async () => {
   document.querySelector(".start-autobuy").removeAttribute("disabled");
   document.querySelector(".min_percent_autobuy").removeAttribute("disabled");
   document.querySelector(".max_percent_autobuy").removeAttribute("disabled");
+  document.querySelector(".limit_autobuy").removeAttribute("disabled");
+
+
 
   loggingAutobuy("Стоп");
   await browser.close();
@@ -1075,4 +1127,23 @@ document.querySelector(".stop-autobuy").addEventListener("click", async () => {
 
 
 
+///////////////////////////////////////////////////////////////
+
+
+//Перенос баланса(отправка)
+document.querySelector(".send_money").addEventListener("click", async () => {
+  var count = document.querySelector(".count_send").value;
+  var api_got = document.querySelector(".api_user").value;
+  var api_get = document.querySelector(".api_own").value;
+  var paymant_pass = document.querySelector(".pay_pass").value;
+  var url = "https://market.csgo.com/api/v2/money-send/"+ count*100 +"/" + api_got +"?pay_pass="+paymant_pass+"&key=" + api_get;
+  console.log(encodeURI(url));
+  var response = await fetch(encodeURI(url));
+  var data = await response.json();
+  console.log(data);
+  if (data["success"] == true){
+    console.log("SUCCESS transaction");
+  }
+
+});
 ///////////////////////////////////////////////////////////////

@@ -101,20 +101,23 @@ div.btn-full {
 
 div.app-title {
 	display: grid;
-	grid-template-columns: 10px 40px 140px 50px 400px;
+	grid-template-columns: 1px 40px 140px 50px 400px;
 	background-color: #6f706f;
 	height: 40px;
 }
 
 div.app-title>div.icon {
-	margin-top: 2px;
+	margin-top: -3px;
 }
 
 div.app-title>div.app-name {
 	font-family: "Staatliches";
 	color: #323332;
 	font-size: 30px;
-	margin-top: 2px;
+	margin-top: 5px;
+	background: url(img/snow.gif);
+	height: 30px;
+	width:128px;
 }
 
 div.user-name {
@@ -148,7 +151,7 @@ div.update-news {
 	font-size: 12px;
 	background-color: #F7FFF2;
 	width: 250px;
-	height: 425px;
+	height: 470px;
 	border-radius: 5px;
 	overflow-y: scroll;
 
@@ -351,7 +354,7 @@ div.items-info-reg {
 	top: 18%;
 	left: 24%;
 	width: 470px;
-	height: 425px;
+	height: 470px;
 }
 
 div.items-info-set{
@@ -364,7 +367,7 @@ div.items-info-set{
 	top: 18%;
 	left: 24%;
 	width: 580px;
-	height: 425px;
+	height: 470px;
 }
 
 ul.items-content-reg>li {
@@ -422,7 +425,7 @@ div.logs-area {
 	top: 18%;
 	left: 24%;
 	width: 450px;
-	height: 425px;
+	height: 470px;
 	border-radius: 5px;
 	overflow-y: scroll;
 
@@ -536,7 +539,7 @@ div.autobuy-logs {
 	top: 18%;
 	left: 24%;
 	width: 420px;
-	height: 425px;
+	height: 470px;
 	border-radius: 5px;
 	overflow-y: scroll;
 
@@ -590,4 +593,11 @@ div.sp-ind {
 	background-color: #ff000066;
 	border-radius: 1000px;
 	/* green #3fff009e */
+}
+
+div.func-send {
+	font-family: "Oswald";
+	position: absolute;
+	top:15%;
+	left:24%;
 }

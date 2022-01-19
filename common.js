@@ -382,17 +382,29 @@ commission.addEventListener("input", () => {
 setInterval(() => {fetch("https://market.csgo.com/api/v2/update-inventory/?key=" + api_market)}, 60000);
 
 //ОБНОВЛЕНИЕ БАЛАНСА МАРКЕТА
-function check_market_bal() {
-    request("https://market.csgo.com/api/v2/get-money?key=" + api_market, function(error, response, body) {
-        if (response.statusCode === 200) {
-            console.log(body);
-            document.querySelector(".profile-bal-market").textContent = JSON.parse(body)["money"] + " " + JSON.parse(body)["currency"];
-        } else {
-            console.error('error:', error);
-            document.querySelector(".profile-bal-market").textContent = "???";
-        }
-    });
+async function check_market_bal() {
+  var response = await fetch(encodeURI("https://market.csgo.com/api/v2/get-money?key=" + api_market));
+  if (response.ok) {
+      console.log(response);
+      var body = await response.json();
+      console.log(body);
+      document.querySelector(".profile-bal-market").textContent = await body["money"] + " " + body["currency"];
+  } else {
+      document.querySelector(".profile-bal-market").textContent = "???";
+  }
 }
+// async function check_market_bal() {
+//     await request("https://market.csgo.com/api/v2/get-money?key=" + api_market, async function(error, response, body) {
+//         if (response.statusCode === 200) {
+//             console.log(body);
+//             document.querySelector(".profile-bal-market").textContent = await JSON.parse(body)["money"] + " " + JSON.parse(body)["currency"];
+//         } else {
+//             console.error('error:', error);
+//             document.querySelector(".profile-bal-market").textContent = "???";
+//         }
+//     });
+//
+// }
 /////////////////////////////////////////////////////////////////
 //ОБНОВЛЕНИЕ СТАТУСА НА МАРКЕТЕ
 function check_status_market() {
@@ -1041,23 +1053,12 @@ async function parseTable() {
     await page.goto(csgo_link); //переходим по ссылке  с настройками
     var skins = await page.$$('tr.tr');
     try {
-      await check_market_bal();
-      var check_bal = document.querySelector(".profile-bal-market").textContent;
+      await check_market_bal();//обновление баланса
+      var check_bal_m = await document.querySelector(".profile-bal-market").textContent;
+      var check_bal = await check_bal_m.replace(" RUB", "");
 
-      console.log("Balance: " + check_bal.replace(" RUB",''));
-      if (limit_balance >= check_bal.replace(" RUB",'')){//выключение перегона, если достигнут лимит
-        document.querySelector(".start-autobuy").removeAttribute("disabled");
-        document.querySelector(".min_percent_autobuy").removeAttribute("disabled");
-        document.querySelector(".max_percent_autobuy").removeAttribute("disabled");
-        document.querySelector(".limit_autobuy").removeAttribute("disabled");
+      await console.log("Balance: " + check_bal);
 
-
-
-        loggingAutobuy("Стоп");
-        await browser.close();
-        clearTimeout(autobuy_timer);
-        return;
-      }
     } catch (e) {
 
     }
@@ -1073,6 +1074,12 @@ async function parseTable() {
         console.log("Skin: " + skin_name + " Round price: " + skin_price_penny);
         for (var d = 0; d <= 5; d++) {
             try {
+
+                console.log("new_check_bal: " + (check_bal - Math.ceil(skin_price)));
+                if ((check_bal - Math.ceil(skin_price)) <= limit_balance) {
+                  console.log("skip item");
+                  break;
+                }
                 var url = "https://market.csgo.com/api/v2/buy?key=" + api_market + "&hash_name=" + skin_name + "&price=" + skin_price_penny;
                 console.log(encodeURI(url));
                 var response = await fetch(encodeURI(url));
@@ -1080,6 +1087,8 @@ async function parseTable() {
                 console.log(data);
                 if (data["success"] == true){
                   loggingAutobuy("Куплен: " + skin_name + " Цена покупки: " + skin_price + " RUB");
+                  check_bal = check_bal - Math.ceil(skin_price);
+                  console.log("check_bal_aftr_buy: " + check_bal);
                 }
                 break;
             } catch (e) {

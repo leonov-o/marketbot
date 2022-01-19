@@ -1,13 +1,13 @@
 {
   "name": "marketbot",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "description": "Auto sales on market.csgo.com",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --x64 --win",
-    "publish": "electron-builder --dir --x64 --win -p always"
+    "publish": "electron-builder --x64 --win -p always"
   },
   "repository": {
     "type": "git",
@@ -41,6 +41,7 @@
     "icon": "E:/Projects/MarketBot/github/icon.ico",
     "productName": "MarketBot by Sanchoys",
     "target": "NSIS",
+
     "directories": {
       "output": "build"
     },

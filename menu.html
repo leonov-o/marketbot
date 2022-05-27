@@ -17,7 +17,7 @@
       <div class="header">
         <div class="sp"></div>
         <div class="version">
-          <h4>version: 1.1.5</h4></div>
+          <h4>version: 1.1.6</h4></div>
         <div class="title"></div>
         <div class="btn-turn"><img src="css/img/turn.png" alt="Закрыть"></div>
         <div class="btn-full"><img src="css/img/full.png" alt="Закрыть"></div>
@@ -27,7 +27,7 @@
       <!-- ЗАГОЛОВОК ПРОГРАММЫ -->
       <div class="app-title">
         <div class="sp"></div>
-        <div class="icon"><img style="width:110%;" src="css/img/icon.png"></div>
+        <div class="icon"><img src="css/img/icon.png"></div>
         <div class="app-name">Market<span style = "color: #f1f1f1;"> Bot</span></div>
         <div class="sp"></div>
         <div class="logs-title">Главная</div>
@@ -50,8 +50,12 @@
           <ul class="logs-table">
             <!-- новости обнов тут -->
             <li class="update_new">
+              <h4>v1.1.6</h4>
+              <p>Расширены настройки Autobuy.</p>
+              <hr>
+            <li class="update_new">
               <h4>v1.1.4</h4>
-              <p>Добавлена возможность переноса баланса между аккаунтами market.csgo.com и ограничение Autobuy по балансу .</p>
+              <p>Добавлена возможность переноса баланса между аккаунтами market.csgo.com и ограничение Autobuy по балансу.</p>
               <hr>
             <li class="update_new">
               <h4>v1.1.3</h4>
@@ -197,22 +201,44 @@
           <ul class="autobuy-logs-table">
           </ul>
         </div>
-        <div class="func-btn-autobuy">
-          <span>Мин.</span>
-          <input type="text" class="min_percent_autobuy" style="width: 100px; text-align: center;">
-          <span class="sp"></span>
-          <span>Макс.</span>
-          <input type="text" class="max_percent_autobuy" style="width: 100px; text-align: center;">
-          <span>Ограничение баланса</span>
-          <input type="text" class="limit_autobuy" style="width: 100px; text-align: center;">
-          <span class="sp"></span>
-          <button class="start-autobuy">Старт</button>
-          <button class="stop-autobuy">Стоп</button>
-        </div>
-        <span class = "text-det"><p>Для автоматической авторизации рекомендуется <br>ввести shared_secret(см. Настройки).
-          <br>В противном случае, при запуске функции,<br> появится диалоговое окно с просьбой ввести SteamGuard код.
 
-        </p>
+
+
+
+        <div class="func-btn-autobuy">
+          <button class="start-autobuy">Старт</button>
+          <button class="stop-autobuy">Стоп</button><br><br>
+          <div class = "settings-block-autobuy">
+          <div class = "settings-block-i-autobuy">
+          <span>Мин. %</span><br>
+          <input type="text" class="min_percent_autobuy" style="width: 100px; text-align: center;">
+          <span>Мин. цена</span><br>
+          <input type="text" value="10" class="min_price_autobuy" style="width: 100px; text-align: center;">
+        </div>
+        <div class = "settings-block-i-autobuy">
+          <span>Макс. %</span><br>
+          <input type="text" class="max_percent_autobuy" style="width: 100px; text-align: center;">
+          <span>Макс. цена</span><br>
+          <input type="text" class="max_price_autobuy" style="width: 100px; text-align: center;">
+        </div>
+          </div>
+          <span>Фильтр продаж</span>
+          <input type="text" value="50" class="filter_autobuy" style="width: 100px; text-align: center;"><br><br>
+
+          <span>Ограничение баланса</span>
+          <input type="text" class="limit_autobuy" style="width: 100px; text-align: center;"><br><br>
+
+          <input type="checkbox" checked class="knife_autobuy">Knife<br>
+          <input type="checkbox" checked class="stattrak_autobuy">Stattrak<br>
+          <input type="checkbox" checked class="souvenir_autobuy">Souvenir<br>
+          <input type="checkbox" checked class="sticker_autobuy">Sticker<br>
+
+
+
+
+        </div>
+
+        <span class = "text-det">
         <div class="steamguard-dialog" style="display:none;">
           <br><br><br>
           <label for="">Введите SteamGuard</label><br>

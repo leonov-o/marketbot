@@ -101,13 +101,13 @@ div.btn-full {
 
 div.app-title {
 	display: grid;
-	grid-template-columns: 1px 40px 140px 50px 400px;
+	grid-template-columns: 10px 40px 140px 50px 400px;
 	background-color: #6f706f;
 	height: 40px;
 }
 
 div.app-title>div.icon {
-	margin-top: -3px;
+	margin-top: 2px;
 }
 
 div.app-title>div.app-name {
@@ -536,10 +536,10 @@ div.autobuy-logs {
 	font-size: 12px;
 	position: absolute;
 	background-color: white;
-	top: 18%;
+	top: 12%;
 	left: 24%;
 	width: 420px;
-	height: 470px;
+	height: 505px;
 	border-radius: 5px;
 	overflow-y: scroll;
 
@@ -558,7 +558,7 @@ ul.autobuy-logs-table>li:hover {
 div.func-btn-autobuy{
 	font-family: "Oswald";
 	position:absolute;
-	left: 24%;
+	left: 70%;
 	top:12%;
 }
 
@@ -567,10 +567,25 @@ div.func-btn-autobuy > button{
 	margin-left: 5px;
 }
 
+.settings-block-autobuy {
+	white-space: nowrap;
+}
+.settings-block-i-autobuy {
+	white-space: normal;
+	display: inline-block;
+	width: 40%;
+	vertical-align: top;
+}
+.settings-block-autobuy .settings-block-i-autobuy:first-child {
+	margin-right: 4%;
+
+}
+
+
 span.text-det{
 	position:absolute;
 	left: 69%;
-	top:17%;
+	top:74%;
 }
 
 span.text-det > p{

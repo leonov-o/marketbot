@@ -1040,14 +1040,56 @@ async function loginInTable() {
 }
 
 async function parseTable() {
+    var min_price = document.querySelector(".min_price_autobuy").value;
+    var max_price = document.querySelector(".max_price_autobuy").value;
+    var filter = document.querySelector(".filter_autobuy").value;
     var min_percent = document.querySelector(".min_percent_autobuy").value;
     var max_percent = document.querySelector(".max_percent_autobuy").value;
     var limit_balance = document.querySelector(".limit_autobuy").value
 
-    var csgo_link = "https://table.altskins.com/ru/site/items?ItemsFilter%5Btype%5D=1&ItemsFilter%5BsalesFilter%5D=bs&ItemsFilter%5Bservice1%5D=showtm&ItemsFilter%5Bservice1Minutes%5D=&ItemsFilter%5Bservice1CountFrom%5D=1&ItemsFilter%5Bservice1CountTo%5D=&ItemsFilter%5BsalesFrom%5D=&ItemsFilter%5Bservice2%5D=showsteama&ItemsFilter%5Bservice2Minutes%5D=&ItemsFilter%5Bservice2CountFrom%5D=&ItemsFilter%5Bservice2CountTo%5D=&ItemsFilter%5Btimeout%5D=5&ItemSearch%5Bname_en%5D=&ItemSearch%5Bpricetm_min%5D=0.1&ItemSearch%5Bpricetm_max%5D=&ItemSearch%5Bpricesteama_min%5D=&ItemSearch%5Bpricesteama_max%5D=&ItemSearch%5Btmsteama_min%5D=" + min_percent + "&ItemSearch%5Btmsteama_max%5D=" + max_percent + "&ItemSearch%5Bsteamatm_min%5D=&ItemSearch%5Bsteamatm_max%5D=";
+    var knife = document.querySelector(".knife_autobuy");
+    var stattrak = document.querySelector(".stattrak_autobuy");
+    var souvenir = document.querySelector(".souvenir_autobuy");
+    var sticker = document.querySelector(".sticker_autobuy");
+    if (knife.checked) {
+      knife = 1;
+    }else {
+      knife = 0;
+    }
+
+    if (stattrak.checked) {
+      stattrak = 1;
+    }else {
+      stattrak = 0;
+    }
+
+    if (souvenir.checked) {
+      souvenir = 1;
+    }else {
+      souvenir = 0;
+    }
+
+    if (sticker.checked) {
+      sticker = 1;
+    }else {
+      sticker = 0;
+    }
+
+    var csgo_link = "https://table.altskins.com/ru/site/items?ItemsFilter%5Bknife%5D=0&ItemsFilter%5Bknife%5D="+knife+"&ItemsFilter%5Bstattrak%5D=0&ItemsFilter%5Bstattrak%5D="+stattrak+"&ItemsFilter%5Bsouvenir%5D=0&ItemsFilter%5Bsouvenir%5D="+souvenir+"&ItemsFilter%5Bsticker%5D=0&ItemsFilter%5Bsticker%5D="+sticker+"&ItemsFilter%5Btype%5D=1&ItemsFilter%5Bservice1%5D=showtm&ItemsFilter%5Bservice2%5D=showsteama&ItemsFilter%5Bunstable1%5D=1&ItemsFilter%5Bunstable2%5D=1&ItemsFilter%5Bhours1%5D=192&ItemsFilter%5Bhours2%5D=192&ItemsFilter%5BpriceFrom1%5D="+min_price+"&ItemsFilter%5BpriceTo1%5D="+max_price+"&ItemsFilter%5BpriceFrom2%5D=&ItemsFilter%5BpriceTo2%5D=&ItemsFilter%5BsalesBS%5D=&ItemsFilter%5BsalesTM%5D=&ItemsFilter%5BsalesST%5D="+filter+"&ItemsFilter%5Bname%5D=&ItemsFilter%5Bservice1Minutes%5D=&ItemsFilter%5Bservice2Minutes%5D=&ItemsFilter%5BpercentFrom1%5D="+min_percent+"&ItemsFilter%5BpercentFrom2%5D=&ItemsFilter%5Btimeout%5D=5&ItemsFilter%5Bservice1CountFrom%5D=1&ItemsFilter%5Bservice1CountTo%5D=&ItemsFilter%5Bservice2CountFrom%5D=1&ItemsFilter%5Bservice2CountTo%5D=&ItemsFilter%5BpercentTo1%5D="+max_percent+"&ItemsFilter%5BpercentTo2%5D="
+
+
+    console.log("min_price: " + min_price);
+    console.log("max_price: " + max_price);
     console.log("min_percent: " + min_percent);
     console.log("max_percent: " + max_percent);
+    console.log("filter: " + filter);
     console.log("limit_balance: " + limit_balance);
+    console.log("knife: " + knife);
+    console.log("stattrak: " + stattrak);
+    console.log("souvenir: " + souvenir);
+    console.log("sticker: " + sticker);
+
+
 
 
     await page.goto(csgo_link); //переходим по ссылке  с настройками
@@ -1106,7 +1148,13 @@ document.querySelector(".start-autobuy").addEventListener("click" , async () => 
   document.querySelector(".min_percent_autobuy").setAttribute("disabled", "true");
   document.querySelector(".max_percent_autobuy").setAttribute("disabled", "true");
   document.querySelector(".limit_autobuy").setAttribute("disabled", "true");
-
+  document.querySelector(".min_price_autobuy").setAttribute("disabled", "true");
+  document.querySelector(".max_price_autobuy").setAttribute("disabled", "true");
+  document.querySelector(".filter_autobuy").setAttribute("disabled", "true");
+  document.querySelector(".knife_autobuy").setAttribute("disabled", "true");
+  document.querySelector(".stattrak_autobuy").setAttribute("disabled", "true");
+  document.querySelector(".souvenir_autobuy").setAttribute("disabled", "true");
+  document.querySelector(".sticker_autobuy").setAttribute("disabled", "true");
 
   loggingAutobuy("Старт");
   await loginInSteam();
@@ -1122,19 +1170,18 @@ document.querySelector(".stop-autobuy").addEventListener("click", async () => {
   document.querySelector(".min_percent_autobuy").removeAttribute("disabled");
   document.querySelector(".max_percent_autobuy").removeAttribute("disabled");
   document.querySelector(".limit_autobuy").removeAttribute("disabled");
-
-
+  document.querySelector(".min_price_autobuy").removeAttribute("disabled");
+  document.querySelector(".max_price_autobuy").removeAttribute("disabled");
+  document.querySelector(".filter_autobuy").removeAttribute("disabled");
+  document.querySelector(".knife_autobuy").removeAttribute("disabled");
+  document.querySelector(".stattrak_autobuy").removeAttribute("disabled");
+  document.querySelector(".souvenir_autobuy").removeAttribute("disabled");
+  document.querySelector(".sticker_autobuy").removeAttribute("disabled");
 
   loggingAutobuy("Стоп");
   await browser.close();
   clearTimeout(autobuy_timer);
 });
-
-
-
-
-
-
 
 ///////////////////////////////////////////////////////////////
 

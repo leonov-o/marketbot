@@ -1,6 +1,6 @@
 {
-  "name": "marketbot",
-  "version": "1.1.6",
+  "name": "marketbot1",
+  "version": "1.1.7",
   "description": "Auto sales on market.csgo.com",
   "main": "main.js",
   "scripts": {
@@ -38,7 +38,7 @@
   },
   "build": {
     "appId": "com.sanchoys.marketbot",
-    "icon": "E:/Projects/MarketBot/github/icon.ico",
+    "icon": "D:/Projects/MarketBot/github/icon.ico",
     "productName": "MarketBot by Sanchoys",
     "target": "NSIS",
 

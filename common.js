@@ -890,14 +890,21 @@ async function refresh_set_inv() {
                   steam_price_set = "...";
 
                 }else{
-                  steam_price_set = filter_list[item_index + 1] + " RUB";
+                  steam_price_set = filter_list[item_index + 1];
                 }
 
               }
 
-              li.innerHTML = '<span class="item_name">' + market_hash_name + '</span><span class="min_price_set">' + min_price + ' RUB</span><span class="buy_price">' + steam_price_set + '</span><input type="text" class="set_price">';
+              li.innerHTML = '<span class="item_name">' + market_hash_name + '</span><span class="min_price_set">' + min_price + ' RUB</span><span class="buy_price">' + steam_price_set + ' RUB</span><input type="text" class="set_price">';
               list_set.appendChild(li);
               items.push(market_hash_name);
+              if(steam_price_set != "...") {
+                if (min_price >= steam_price_set){
+                  document.querySelector("li[data-name = '" + market_hash_name + "'] input[class= 'set_price']").value = Math.round(min_price);
+                }else{
+                  document.querySelector("li[data-name = '" + market_hash_name + "'] input[class= 'set_price']").value = Math.round(steam_price_set);
+              }
+            }
 
           }
       }

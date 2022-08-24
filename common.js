@@ -987,11 +987,16 @@ var browser, page;
 async function loginInSteam() {
   //var executablePath = puppeteer.executablePath() //для разработки
   var executablePath = puppeteer.executablePath().replace("app.asar", "app.asar.unpacked") //для публикации
-  browser = await puppeteer.launch({executablePath: executablePath, headless: true, args: ['--start-fullscreen'] });
+  browser = await puppeteer.launch({executablePath: executablePath, headless: false, args: ['--start-fullscreen'] });
   page = await browser.newPage();
   // await page.setViewport({ width: 1366, height: 768});
+  await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/67.0.3372.0 Safari/537.36');
   loggingAutobuy("Авторизация Steam...");
   await page.goto('https://steamcommunity.com/login'); //переходим по ссылке для авторизации
+  await page.screenshot({
+  path: 'screenshot.jpg'
+});
+
   await page.waitForSelector("#login_form"); //ждем пока загрузится форма для вписывания логина/пароля
   await page.waitFor(1000); //просто ждем 1 секунду
   await page.click('#input_username'); //кликаем на поле, куда нужно вписывать логин

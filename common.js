@@ -987,25 +987,35 @@ var browser, page;
 async function loginInSteam() {
   //var executablePath = puppeteer.executablePath() //для разработки
   var executablePath = puppeteer.executablePath().replace("app.asar", "app.asar.unpacked") //для публикации
-  browser = await puppeteer.launch({executablePath: executablePath, headless: false, args: ['--start-fullscreen'] });
+  browser = await puppeteer.launch({executablePath: executablePath, headless: true, args: ['--start-fullscreen'] });
   page = await browser.newPage();
   // await page.setViewport({ width: 1366, height: 768});
-  await page.setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/67.0.3372.0 Safari/537.36');
+  // await page.setExtraHTTPHeaders({
+  //       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
+  //       'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+  //       'accept-encoding': 'gzip, deflate, br',
+  //       'accept-language': 'ru-RU,ru;q=0.9',
+  //       'access-control-allow-origin': 'https://steamcommunity.com',
+  //       'access-control-expose-headers': 'X-eresult, X-error_message'
+  //   })
   loggingAutobuy("Авторизация Steam...");
-  await page.goto('https://steamcommunity.com/login'); //переходим по ссылке для авторизации
-  await page.screenshot({
-  path: 'screenshot.jpg'
-});
+  await page.goto('https://steamcommunity.com/login/home'); //переходим по ссылке для авторизации
+//   await page.screenshot({
+//   path: 'screenshot.jpg'
+// });
 
-  await page.waitForSelector("#login_form"); //ждем пока загрузится форма для вписывания логина/пароля
+  await page.waitForSelector(".newlogindialog_LoginForm_3Tsg9"); //ждем пока загрузится форма для вписывания логина/пароля
   await page.waitFor(1000); //просто ждем 1 секунду
-  await page.click('#input_username'); //кликаем на поле, куда нужно вписывать логин
-  await page.type("#input_username", steam_login); //вписываем сам логин
-  await page.click('#input_password'); //кликаем на поле, куда нужно вписывать пароль
-  await page.type("#input_password", steam_pass); //вписываем сам пароль
+  await page.click('.newlogindialog_TextField_2KXGK:first-child input'); //кликаем на поле, куда нужно вписывать логин
+  await page.type(".newlogindialog_TextField_2KXGK:first-child input", steam_login); //вписываем сам логин
+  await page.click('.newlogindialog_TextField_2KXGK:nth-child(2) input'); //кликаем на поле, куда нужно вписывать пароль
+  await page.type(".newlogindialog_TextField_2KXGK:nth-child(2) input", steam_pass); //вписываем сам пароль
   await page.waitFor(1000); //ждем 1 секунду
-  await page.click('#login_btn_signin > button'); //кликаем на кнопку "войти"
-  await page.waitForSelector("body > div.newmodal > div.newmodal_content_border > div > div > div > form"); //ждем пока прогрузится окно для ввода гуард кода
+  await page.click('.newlogindialog_SignInButtonContainer_14fsn .newlogindialog_SubmitButton_2QgFE'); //кликаем на кнопку "войти"
+//   await page.screenshot({
+//   path: 'screenshot2.jpg'
+// });
+  await page.waitForSelector(".newlogindialog_SegmentedCharacterInput_1kJ6q"); //ждем пока прогрузится окно для ввода гуард кода
   if (shared_secret == ''){
     //ввод стим гвард
     document.querySelector(".steamguard-dialog").style = "display: block;"
@@ -1027,9 +1037,12 @@ async function loginInSteam() {
   }
   await page.keyboard.type(code); //печатаем на клавиатуре наш код (просто page.type() - не работает)
   await page.waitFor(1000); //ждем 1 секунду
-  await page.click('#login_twofactorauth_buttonset_entercode > div.auth_button.leftbtn > div.auth_button_h3'); //кликаем на кнопку подтвердить/войти
+  // await page.click('#login_twofactorauth_buttonset_entercode > div.auth_button.leftbtn > div.auth_button_h3'); //кликаем на кнопку подтвердить/войти
   //ждем пока прогрузится наш профиль (если появилась кнопка РЕДАКТИРОВАТЬ, то значит мы залогинились) костыль конечно, но как сделать по другому не совсем понятно.
   await page.waitFor(5000); //ждем 2 секунду
+//   await page.screenshot({
+//   path: 'screenshot3.jpg'
+// });
 
   await page.waitForSelector('#global_actions > a > img');
   console.log('Залогинились в Steam'); //выводим в коносль что залогинились

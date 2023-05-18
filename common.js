@@ -992,11 +992,9 @@ async function loginInSteam() {
   // await page.setViewport({ width: 1366, height: 768});
   // await page.setExtraHTTPHeaders({
   //       'user-agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36',
-  //       'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
+  //       'accept': 'application/json, text/plain, */*',
   //       'accept-encoding': 'gzip, deflate, br',
-  //       'accept-language': 'ru-RU,ru;q=0.9',
-  //       'access-control-allow-origin': 'https://steamcommunity.com',
-  //       'access-control-expose-headers': 'X-eresult, X-error_message'
+  //       'accept-language': 'ru-RU,ru;q=0.9'
   //   })
   loggingAutobuy("Авторизация Steam...");
   await page.goto('https://steamcommunity.com/login/home'); //переходим по ссылке для авторизации

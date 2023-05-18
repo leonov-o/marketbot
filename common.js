@@ -655,7 +655,7 @@ async function reg_price() {
                 let min_limit = await document.querySelector("li[data-name = '" + market_hash_name + "']").getAttribute('data-minlimit');
                 let max_limit = await document.querySelector("li[data-name = '" + market_hash_name + "']").getAttribute('data-maxlimit');
                 if (min_limit == '') {
-                  document.querySelector("li[data-name = '" + market_hash_name + "']").setAttribute("data-minlimit") = 0;
+                  document.querySelector("li[data-name = '" + market_hash_name + "']").setAttribute("data-minlimit", 0);
                   min_limit = 0;
                 }
 
@@ -1013,7 +1013,7 @@ async function loginInSteam() {
 //   await page.screenshot({
 //   path: 'screenshot2.jpg'
 // });
-  await page.waitForSelector(".newlogindialog_SegmentedCharacterInput_1kJ6q"); //ждем пока прогрузится окно для ввода гуард кода
+  await page.waitForSelector(".segmentedinputs_SegmentedCharacterInput_3PDBF"); //ждем пока прогрузится окно для ввода гуард кода
   if (shared_secret == ''){
     //ввод стим гвард
     document.querySelector(".steamguard-dialog").style = "display: block;"

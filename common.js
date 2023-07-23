@@ -760,9 +760,10 @@ function auth_steam() {
         "password": steam_pass,
         "twoFactorCode": code,
     };
-    community.login(details, function (err, cookies, sessionID, steamguard, oAuthToken) {
+    community.login(details, function (err, cookies, sessionID) {
         console.log(err, sessionID);
-        steam_id = steamguard.split("||")[0];
+        steam_id = sessionID[3].split("steamLoginSecure=")[1].split("%7C%")[0];
+        ;
         session_id = sessionID;
         console.log("steamid: ", steam_id);
         try {
@@ -1062,7 +1063,7 @@ async function loginInSteam() {
     await page.waitForSelector('#global_actions > a > img');
     console.log('Залогинились в Steam'); //выводим в коносль что залогинились
     loggingAutobuy("Успешно.");
-
+``
 }
 
 async function loginInTable() {

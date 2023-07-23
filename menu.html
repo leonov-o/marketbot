@@ -1,291 +1,304 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  <head>
+<head>
 
     <link rel="stylesheet" href="css/menu_style.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MarketBot</title>
-  </head>
+</head>
 
-  <body>
+<body>
 
-    <div class="app">
-      <!-- ХЕДЕР -->
-      <div class="header">
+<div class="app">
+    <!-- ХЕДЕР -->
+    <div class="header">
         <div class="sp"></div>
         <div class="version">
-          <h4>version: 1.1.10</h4></div>
+            <h4>version: 1.1.12</h4></div>
         <div class="title"></div>
         <div class="btn-turn"><img src="css/img/turn.png" alt="Закрыть"></div>
         <div class="btn-full"><img src="css/img/full.png" alt="Закрыть"></div>
         <div class="btn-close"><img src="css/img/close.png" alt="Закрыть"></div>
-      </div>
+    </div>
 
-      <!-- ЗАГОЛОВОК ПРОГРАММЫ -->
-      <div class="app-title">
+    <!-- ЗАГОЛОВОК ПРОГРАММЫ -->
+    <div class="app-title">
         <div class="sp"></div>
         <div class="icon"><img src="css/img/icon.png"></div>
-        <div class="app-name">Market<span style = "color: #f1f1f1;"> Bot</span></div>
+        <div class="app-name">Market<span style="color: #f1f1f1;"> Bot</span></div>
         <div class="sp"></div>
         <div class="logs-title">Главная</div>
-      </div>
+    </div>
 
-      <!-- ОКНО ЛОГОВ -->
-      <div class="func-logs">
+    <!-- ОКНО ЛОГОВ -->
+    <div class="func-logs">
         <div class="func-logs-title">
-          <div class="sp"></div>
-          <div class="func-logs-name">Логи</div>
-          <div class="sp"></div>
-          <div class="update-name">Обновления</div>
+            <div class="sp"></div>
+            <div class="func-logs-name">Логи</div>
+            <div class="sp"></div>
+            <div class="update-name">Обновления</div>
         </div>
         <div class="logs-area">
-          <ul class="logs-table">
-            <!-- логи тут -->
-          </ul>
+            <ul class="logs-table">
+                <!-- логи тут -->
+            </ul>
         </div>
         <div class="update-news">
-          <ul class="logs-table">
-            <!-- новости обнов тут -->
-            <li class="update_new">
-              <h4>v1.1.8</h4>
-              <p>Autobuy fix.</p>
-              <hr>
-            <li class="update_new">
-              <h4>v1.1.6</h4>
-              <p>Расширены настройки Autobuy.</p>
-              <hr>
-            <li class="update_new">
-              <h4>v1.1.4</h4>
-              <p>Добавлена возможность переноса баланса между аккаунтами market.csgo.com и ограничение Autobuy по балансу.</p>
-              <hr>
-            <li class="update_new">
-              <h4>v1.1.3</h4>
-              <p>Добавлена возможность переключения между аккаунтами.</p>
-              <hr>
-            <li class="update_new">
-              <h4>v1.1.2</h4>
-              <p>Настройка ограничений Autobuy.</p>
-              <hr>
-            <li class="update_new">
-              <h4>v1.1.1</h4>
-              <p>Фикс багов с выставлением цен.</p>
-              <hr>
-            <li class="update_new">
-              <h4>v1.1.0</h4>
-              <p>Фикс багов с мониторингом цен.</p>
-              <hr>
-            <li class="update_new">
-              <h4>v1.0.9</h4>
-              <p>Работает окно логов, добавлена вкладка Autobuy,  фиксы мелких ошибок.</p>
-              <hr>
-            </li>
-            <li class="update_new">
-              <h4>v1.0.8</h4>
-              <p>Фиксы мелких ошибок.</p>
-              <hr>
-            </li>
-            <li class="update_new">
-              <h4>v1.0.7</h4>
-              <p>Оптимизация, фиксы багов.</p>
-              <hr>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- ОКНО МОНИТОРИНГА ЦЕН -->
-      <div class="func-reg-price" style="display: none;">
-        <div class="reg-area">
-          <div class="reg-area-title">
-            <div class="sp"></div>
-            <div class="item-name-title">Название предмета</div>
-            <div class="min-limit-market-title">Мин. порог</div>
-            <div class="sp"></div>
-            <div class="max-limit-market-title">Макс. порог</div>
-
-          </div>
-
-          <div class="items-info-reg">
-            <ul class="items-content-reg">
-              <li class="li_Item">Обновите инвентарь</li>
-
+            <ul class="logs-table">
+                <!-- новости обнов тут -->
+                <li class="update_new">
+                    <h4>v1.1.12</h4>
+                    <p>Исправление ошибок</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.1.8</h4>
+                    <p>Autobuy fix.</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.1.6</h4>
+                    <p>Расширены настройки Autobuy.</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.1.4</h4>
+                    <p>Добавлена возможность переноса баланса между аккаунтами market.csgo.com и ограничение Autobuy по
+                        балансу.</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.1.3</h4>
+                    <p>Добавлена возможность переключения между аккаунтами.</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.1.2</h4>
+                    <p>Настройка ограничений Autobuy.</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.1.1</h4>
+                    <p>Фикс багов с выставлением цен.</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.1.0</h4>
+                    <p>Фикс багов с мониторингом цен.</p>
+                    <hr>
+                <li class="update_new">
+                    <h4>v1.0.9</h4>
+                    <p>Работает окно логов, добавлена вкладка Autobuy, фиксы мелких ошибок.</p>
+                    <hr>
+                </li>
+                <li class="update_new">
+                    <h4>v1.0.8</h4>
+                    <p>Фиксы мелких ошибок.</p>
+                    <hr>
+                </li>
+                <li class="update_new">
+                    <h4>v1.0.7</h4>
+                    <p>Оптимизация, фиксы багов.</p>
+                    <hr>
+                </li>
             </ul>
-          </div>
+        </div>
+    </div>
+
+    <!-- ОКНО МОНИТОРИНГА ЦЕН -->
+    <div class="func-reg-price" style="display: none;">
+        <div class="reg-area">
+            <div class="reg-area-title">
+                <div class="sp"></div>
+                <div class="item-name-title">Название предмета</div>
+                <div class="min-limit-market-title">Мин. порог</div>
+                <div class="sp"></div>
+                <div class="max-limit-market-title">Макс. порог</div>
+
+            </div>
+
+            <div class="items-info-reg">
+                <ul class="items-content-reg">
+                    <li class="li_Item">Обновите инвентарь</li>
+
+                </ul>
+            </div>
 
         </div>
 
         <div class="func-app-reg">
-          <div class="sp"></div>
-          <div class="refresh-items">
-            <button class="btn-refresh">Обновить выставленые предметы</button>
-          </div>
-          <div class="sp"></div>
-          <div class="btn-start-stop">
-            <div class="start">
-              <button class="btn-start">Старт</button>
-            </div>
-            <div class="sp"><div class="sp-ind"></div></div>
-            <div class="stop">
-              <button class="btn-stop">Стоп</button>
+            <div class="sp"></div>
+            <div class="refresh-items">
+                <button class="btn-refresh">Обновить выставленые предметы</button>
             </div>
             <div class="sp"></div>
-          </div>
+            <div class="btn-start-stop">
+                <div class="start">
+                    <button class="btn-start">Старт</button>
+                </div>
+                <div class="sp">
+                    <div class="sp-ind"></div>
+                </div>
+                <div class="stop">
+                    <button class="btn-stop">Стоп</button>
+                </div>
+                <div class="sp"></div>
+            </div>
         </div>
 
         <div class="item-details">
-          <img src="" alt=""class = "item-image">
-          <p>Название предмета: <span class="market_hash_name"></span></p>
-          <p>ID (item): <span class="item_id_market"></span></p>
-          <p>ID (class_instance): <span class="item_id_steam"></span></p>
-          <p>Моя цена: <span class="item_price"></span></p>
-          <p>Минимальная цена: <span class="min_price"></span><img src="./css/img/person.svg" class="refresh-icon-min" onclick="show_min_price()" alt=""></p>
-          <p>Цена моментальной продажи: <span class="best_offer"></span><img src="./css/img/person.svg" class="refresh-icon-best" alt="" onclick="show_best_offer()"></p>
-          <p>Цена покупки: <span class="steam_price"></span><img src="./css/img/person.svg" class="refresh-icon-stPrice" onclick="show_steam_price()" alt=""><span class="wait-data"></span><button class = "btn-load-data"onclick = "loadDataPrice()">Загрузить базу</button></p>
-          <div class="status-code-div">status: <span class="status-code"></span></div>
+            <img src="" alt="" class="item-image">
+            <p>Название предмета: <span class="market_hash_name"></span></p>
+            <p>ID (item): <span class="item_id_market"></span></p>
+            <p>ID (class_instance): <span class="item_id_steam"></span></p>
+            <p>Моя цена: <span class="item_price"></span></p>
+            <p>Минимальная цена: <span class="min_price"></span><img src="./css/img/person.svg" class="refresh-icon-min"
+                                                                     onclick="show_min_price()" alt=""></p>
+            <p>Цена моментальной продажи: <span class="best_offer"></span><img src="./css/img/person.svg"
+                                                                               class="refresh-icon-best" alt=""
+                                                                               onclick="show_best_offer()"></p>
+            <p>Цена покупки: <span class="steam_price"></span><img src="./css/img/person.svg"
+                                                                   class="refresh-icon-stPrice"
+                                                                   onclick="show_steam_price()" alt=""><span
+                    class="wait-data"></span>
+                <button class="btn-load-data" onclick="loadDataPrice()">Загрузить базу</button>
+            </p>
+            <div class="status-code-div">status: <span class="status-code"></span></div>
 
 
         </div>
 
         <div class="settings-reg">
-          <button class="paste-reg">Вставить</button>
-          <button class="save-reg">Сохранить</button>
+            <button class="paste-reg">Вставить</button>
+            <button class="save-reg">Сохранить</button>
         </div>
 
-      </div>
+    </div>
 
-      <!-- ОКНО ВЫСТАВЛЕНИЯ ПРЕДМЕТОВ -->
-      <div class="func-set-items" style="display: none;">
+    <!-- ОКНО ВЫСТАВЛЕНИЯ ПРЕДМЕТОВ -->
+    <div class="func-set-items" style="display: none;">
         <div class="set-area">
-          <div class="set-area-title">
-            <div class="sp"></div>
-            <div class="item-name-title">Название предмета</div>
-            <div class="min-price-title">Мин. цена</div>
-            <div class="sp"></div>
-            <div class="min-price-title">Цена покупки</div>
-            <div class="sp"></div>
-            <div class="my-price-title">Цена</div>
-            <div class="sp"></div>
+            <div class="set-area-title">
+                <div class="sp"></div>
+                <div class="item-name-title">Название предмета</div>
+                <div class="min-price-title">Мин. цена</div>
+                <div class="sp"></div>
+                <div class="min-price-title">Цена покупки</div>
+                <div class="sp"></div>
+                <div class="my-price-title">Цена</div>
+                <div class="sp"></div>
 
-          </div>
+            </div>
 
-          <div class="items-info-set">
-            <ul class="items-content-set">
-              <li class="li_newItemSet">Обновите инвентарь</li>
+            <div class="items-info-set">
+                <ul class="items-content-set">
+                    <li class="li_newItemSet">Обновите инвентарь</li>
 
 
-            </ul>
-          </div>
+                </ul>
+            </div>
 
         </div>
 
         <div class="func-app-set">
-          <div class="sp"></div>
-          <div class="refresh-items-set">
-            <button class="btn-refresh-set">Обновить</button>
-          </div>
-          <div class="sp"></div>
-          <div class="btn-start-stop-set">
-            <div class="start-set">
-              <button class="btn-start-set">Выставить</button>
-            </div>
-
             <div class="sp"></div>
-          </div>
-          <span class="wait-data"></span><button class = "btn-load-data"onclick = "loadDataPrice()">Загрузить базу</button>
+            <div class="refresh-items-set">
+                <button class="btn-refresh-set">Обновить</button>
+            </div>
+            <div class="sp"></div>
+            <div class="btn-start-stop-set">
+                <div class="start-set">
+                    <button class="btn-start-set">Выставить</button>
+                </div>
+
+                <div class="sp"></div>
+            </div>
+            <span class="wait-data"></span>
+            <button class="btn-load-data" onclick="loadDataPrice()">Загрузить базу</button>
 
         </div>
-      </div>
+    </div>
 
-      <!-- ОКНО AUTOBUY -->
-      <div class="func-autobuy" style = "display: none;">
+    <!-- ОКНО AUTOBUY -->
+    <div class="func-autobuy" style="display: none;">
         <div class="autobuy-logs">
-          <ul class="autobuy-logs-table">
-          </ul>
+            <ul class="autobuy-logs-table">
+            </ul>
         </div>
-
-
 
 
         <div class="func-btn-autobuy">
-          <button class="start-autobuy">Старт</button>
-          <button class="stop-autobuy">Стоп</button><br><br>
-          <div class = "settings-block-autobuy">
-          <div class = "settings-block-i-autobuy">
-          <span>Мин. %</span><br>
-          <input type="text" class="min_percent_autobuy" style="width: 100px; text-align: center;">
-          <span>Мин. цена</span><br>
-          <input type="text" value="10" class="min_price_autobuy" style="width: 100px; text-align: center;">
+            <button class="start-autobuy">Старт</button>
+            <button class="stop-autobuy">Стоп</button>
+            <br><br>
+            <div class="settings-block-autobuy">
+                <div class="settings-block-i-autobuy">
+                    <span>Мин. %</span><br>
+                    <input type="text" class="min_percent_autobuy" style="width: 100px; text-align: center;">
+                    <span>Мин. цена</span><br>
+                    <input type="text" value="10" class="min_price_autobuy" style="width: 100px; text-align: center;">
+                </div>
+                <div class="settings-block-i-autobuy">
+                    <span>Макс. %</span><br>
+                    <input type="text" class="max_percent_autobuy" style="width: 100px; text-align: center;">
+                    <span>Макс. цена</span><br>
+                    <input type="text" class="max_price_autobuy" style="width: 100px; text-align: center;">
+                </div>
+            </div>
+            <span>Фильтр продаж</span>
+            <input type="text" value="50" class="filter_autobuy" style="width: 100px; text-align: center;"><br><br>
+
+            <span>Ограничение баланса</span>
+            <input type="text" class="limit_autobuy" style="width: 100px; text-align: center;"><br><br>
+
+            <input type="checkbox" checked class="knife_autobuy">Knife<br>
+            <input type="checkbox" checked class="stattrak_autobuy">Stattrak<br>
+            <input type="checkbox" checked class="souvenir_autobuy">Souvenir<br>
+            <input type="checkbox" checked class="sticker_autobuy">Sticker<br>
+
+
         </div>
-        <div class = "settings-block-i-autobuy">
-          <span>Макс. %</span><br>
-          <input type="text" class="max_percent_autobuy" style="width: 100px; text-align: center;">
-          <span>Макс. цена</span><br>
-          <input type="text" class="max_price_autobuy" style="width: 100px; text-align: center;">
-        </div>
-          </div>
-          <span>Фильтр продаж</span>
-          <input type="text" value="50" class="filter_autobuy" style="width: 100px; text-align: center;"><br><br>
 
-          <span>Ограничение баланса</span>
-          <input type="text" class="limit_autobuy" style="width: 100px; text-align: center;"><br><br>
-
-          <input type="checkbox" checked class="knife_autobuy">Knife<br>
-          <input type="checkbox" checked class="stattrak_autobuy">Stattrak<br>
-          <input type="checkbox" checked class="souvenir_autobuy">Souvenir<br>
-          <input type="checkbox" checked class="sticker_autobuy">Sticker<br>
-
-
-
-
-        </div>
-
-        <span class = "text-det">
+        <span class="text-det">
         <div class="steamguard-dialog" style="display:none;">
           <br><br><br>
           <label for="codeInput">Введите SteamGuard</label><br>
           <input id="codeInput" style="text-align: center;" type="text" class="code-input">
-          <button class="submit-code" onclick = 'guard_input = true;'>Отправить</button>
+          <button class="submit-code" onclick='guard_input = true;'>Отправить</button>
         </div>
       </span>
 
-      </div>
+    </div>
 
-      <!-- Перенос баланса -->
-      <div class="func-send" style="display: none;">
+    <!-- Перенос баланса -->
+    <div class="func-send" style="display: none;">
         <div class="send-set">
-          <span>Сумма</span><br>
-          <input type="text" class="count_send" style="width: 300px; text-align: center;"><br>
-          <span>API-key получателя</span><br>
-          <input type="text" class="api_user" style="width: 300px; text-align: center;"><br>
-          <span>API-key отправителя</span><br>
-          <input type="text" class="api_own" style="width: 300px; text-align: center;"><br>
-          <span>Платежный пароль</span><br>
-          <input type="text" class="pay_pass" style="width: 300px; text-align: center;"><br><br>
-          <button class="send_money">Отправить</button>
+            <span>Сумма</span><br>
+            <input type="text" class="count_send" style="width: 300px; text-align: center;"><br>
+            <span>API-key получателя</span><br>
+            <input type="text" class="api_user" style="width: 300px; text-align: center;"><br>
+            <span>API-key отправителя</span><br>
+            <input type="text" class="api_own" style="width: 300px; text-align: center;"><br>
+            <span>Платежный пароль</span><br>
+            <input type="text" class="pay_pass" style="width: 300px; text-align: center;"><br><br>
+            <button class="send_money">Отправить</button>
         </div>
 
 
-      </div>
+    </div>
 
-      <!-- ОКНО КАЛЬКУЛЯТОРА ВЫГОДЫ -->
-      <div class="func-calc" style="display: none;">
+    <!-- ОКНО КАЛЬКУЛЯТОРА ВЫГОДЫ -->
+    <div class="func-calc" style="display: none;">
         <div class="calc">
-          <label for="f_price">Цена 1</label>
-          <br>
-          <input class="calc_input" size="8" type="text" id="f_price">
+            <label for="f_price">Цена 1</label>
+            <br>
+            <input class="calc_input" size="8" type="text" id="f_price">
         </div>
         <div class="calc">
-          <label for="s_price">Цена 2</label>
-          <br>
-          <input class="calc_input" size="8" type="text" id="s_price">
+            <label for="s_price">Цена 2</label>
+            <br>
+            <input class="calc_input" size="8" type="text" id="s_price">
         </div>
         <div class="calc">
-          <label for="commission">% комиссии</label>
-          <br>
-          <input class="calc_input" size="8" type="text" id="commission" pattern="^[ 0-9]+$">
+            <label for="commission">% комиссии</label>
+            <br>
+            <input class="calc_input" size="8" type="text" id="commission" pattern="^[ 0-9]+$">
         </div>
         <br>
         <br>
@@ -294,85 +307,89 @@
         <br>
 
         <p>Выгода: <span class="calc_profit"> </span></p>
-      </div>
+    </div>
 
-      <!-- ОКНО НАСТРОЕК -->
-      <div class="func-settings" style="display: none;">
+    <!-- ОКНО НАСТРОЕК -->
+    <div class="func-settings" style="display: none;">
         <span>Выбор аккаунта: </span>
         <select name="account_select" id="account_select"></select>
-        <div class = 'name'>Steam логин <input class="steam-login" type="text"></div>
-        <div class = 'name'>Steam пароль <input class="steam-pass" type="text"></div>
-        <div class = 'name'>Market API-key <input class="market-api" type="text"></div>
-        <div class = 'name'>Steam API-key <input class="steam-api" type="text"></div>
-        <div class = 'name'>shared_secret <span class="hide-info">Из maFile SDA (/SDA-X.X.XX/maFiles)</span> <input class="shared-secret" type="text"></div>
+        <div class='name'>Steam логин <input class="steam-login" type="text"></div>
+        <div class='name'>Steam пароль <input class="steam-pass" type="text"></div>
+        <div class='name'>Market API-key <input class="market-api" type="text"></div>
+        <div class='name'>Steam API-key <input class="steam-api" type="text"></div>
+        <div class='name'>shared_secret <span class="hide-info">Из maFile SDA (/SDA-X.X.XX/maFiles)</span> <input
+                class="shared-secret" type="text"></div>
 
 
-        <button class="btn-save-settings" onclick = "save_settings()">Сохранить</button>
-        <button class="btn-del-settings" onclick = "del_settings()">Удалить все</button>
-        <button class="btn-use-settings" onclick = "use_settings()">Использовать</button>
+        <button class="btn-save-settings" onclick="save_settings()">Сохранить</button>
+        <button class="btn-del-settings" onclick="del_settings()">Удалить все</button>
+        <button class="btn-use-settings" onclick="use_settings()">Использовать</button>
 
-      </div>
-      <!-- ОКНО "О ПРОГРАММЕ" -->
-      <div class="func-about" style="display: none;">
+    </div>
+    <!-- ОКНО "О ПРОГРАММЕ" -->
+    <div class="func-about" style="display: none;">
         <p>Разработчику лень дописывать этот раздел, ибо кому надо, тот все знает. Может быть вы не кому надо.</p>
-        <b>Сообщить об ошибке  </b><img src="./css/img/telegram.png" alt="" style="margin-right: 8px; vertical-align: middle;width: 3%;">: @sanchoys_l
-      </div>
+        <b>Сообщить об ошибке </b><img src="./css/img/telegram.png" alt=""
+                                       style="margin-right: 8px; vertical-align: middle;width: 3%;">: @sanchoys_l
+    </div>
 
-      <!-- МЕНЮ -->
-      <ul class="nav">
+    <!-- МЕНЮ -->
+    <ul class="nav">
 
         <li class="btn-main"><img src="./css/img/house-door.svg" alt="">
-          <p>Главная</p>
+            <p>Главная</p>
         </li>
         <hr>
         <li class="btn-price-reg"><img src="./css/img/cash.svg" alt="">
-          <p>Мониторинг цен</p>
+            <p>Мониторинг цен</p>
         </li>
         <hr>
         <li class="btn-items-set"><img src="./css/img/list-check.svg" alt="">
-          <p>Выставление предметов</p>
+            <p>Выставление предметов</p>
         </li>
         <hr>
         <li class="btn-autobuy"><img src="./css/img/bag-check.svg" alt="">
-          <p>Autobuy</p>
+            <p>Autobuy</p>
         </li>
         <hr>
         <li class="btn-send"><img src="./css/img/wallet.svg" alt="">
-          <p>Перенос баланса</p>
+            <p>Перенос баланса</p>
         </li>
         <hr>
         <li class="btn-calc"><img src="./css/img/percent.svg" alt="">
-          <p>Калькулятор выгоды</p>
+            <p>Калькулятор выгоды</p>
         </li>
         <hr>
         <li class="btn-settings"><img src="./css/img/gear.svg" alt="">
-          <p>Настройки</p>
+            <p>Настройки</p>
         </li>
         <hr>
         <div class="profile">
-          <div class="user-name">
-            <span class="profile-avatar"><img src="" alt="" class = "profile-icon"></span>
-            <span class="profile-name">NICKNAME</span>
+            <div class="user-name">
+                <span class="profile-avatar"><img src="" alt="" class="profile-icon"></span>
+                <span class="profile-name">NICKNAME</span>
             </div>
-          <p>Баланс Market: <span class="profile-bal-market">-</span><img src="./css/img/person.svg" alt="" style="width: 10%;" class="refresh-icon"></p>
-          <p style="margin-left:70px;">Статус <img src="./css/img/person.svg" class="refresh-icon-status" alt=""></p>
-          <div class="status">
-            <p>Ссылка на обмен: <span class="profile-trade-link"></span></p>
-            <p>Доступность трейд офферов: <span class="profile-trade-check"></span></p>
-            <p>Онлайн: <span class="profile-site-online"></span></p>
-            <p>Блокировка продаж: <span class="profile-site-notmpban"></span></p>
-          </div>
+            <p>Баланс Market: <span class="profile-bal-market">-</span><img src="./css/img/person.svg" alt=""
+                                                                            style="width: 10%;" class="refresh-icon">
+            </p>
+            <p style="margin-left:70px;">Статус <img src="./css/img/person.svg" class="refresh-icon-status" alt=""></p>
+            <div class="status">
+                <p>Ссылка на обмен: <span class="profile-trade-link"></span></p>
+                <p>Доступность трейд офферов: <span class="profile-trade-check"></span></p>
+                <p>Онлайн: <span class="profile-site-online"></span></p>
+                <p>Блокировка продаж: <span class="profile-site-notmpban"></span></p>
+            </div>
 
         </div>
 
         <hr>
         <li class="btn-about"><img src="./css/img/info-circle.svg" alt="">
-          <p>О программе</p>
+            <p>О программе</p>
         </li>
-      </ul>
-    </div>
-    <script src="common.js"></script>
+    </ul>
+</div>
+<script src="common.js"></script>
 
-  </body>
+</body>
 
 </html>

@@ -1,6 +1,6 @@
 {
   "name": "marketbot1",
-  "version": "1.1.10",
+  "version": "1.1.12",
   "description": "Auto sales on market.csgo.com",
   "main": "main.js",
   "scripts": {
@@ -34,14 +34,13 @@
     "puppeteer": "^10.4.0",
     "request": "^2.88.2",
     "steam-totp": "^2.1.1",
-    "steamcommunity": "^3.43.1"
+    "steamcommunity": "^3.45.0"
   },
   "build": {
     "appId": "com.sanchoys.marketbot",
     "icon": "D:/Projects/MarketBot/github/icon.ico",
     "productName": "MarketBot by Sanchoys",
     "target": "NSIS",
-
     "directories": {
       "output": "build"
     },

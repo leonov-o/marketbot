@@ -1,52 +1,101 @@
 {
-  "name": "marketbot1",
-  "version": "1.1.12",
-  "description": "Auto sales on market.csgo.com",
-  "main": "main.js",
-  "scripts": {
-    "start": "electron .",
-    "pack": "electron-builder --dir",
-    "dist": "electron-builder --x64 --win",
-    "publish": "electron-builder --x64 --win -p always"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/AlexandrLeonov/marketbot.git"
-  },
-  "devDependencies": {
-    "electron": "^15.1.2",
-    "electron-builder": "^22.13.1"
-  },
+  "name": "marketbotv2",
+  "version": "2.0.0",
+  "private": false,
   "author": "Sanchoys",
   "license": "ISC",
+  "description": "Auto sales on market.csgo.com",
   "bugs": {
     "url": "https://github.com/AlexandrLeonov/marketbot/issues"
   },
-  "homepage": "https://github.com/AlexandrLeonov/marketbot#readme",
+  "homepage": "./",
   "dependencies": {
-    "@electron/remote": "^2.0.1",
-    "cheerio": "^1.0.0-rc.10",
-    "electron-log": "^4.4.1",
-    "electron-updater": "^4.3.9",
-    "fs": "0.0.1-security",
-    "git": "^0.1.5",
-    "node-fetch": "^2.6.1",
-    "puppeteer": "^10.4.0",
-    "request": "^2.88.2",
-    "steam-totp": "^2.1.1",
-    "steamcommunity": "^3.45.0"
+    "@electron/remote": "^2.0.8",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "cheerio": "^1.0.0-rc.12",
+    "concurrently": "^7.4.0",
+    "cross-env": "^7.0.3",
+    "electron-updater": "^6.1.1",
+    "node-fetch": "2.6.7",
+    "puppeteer": "^20.9.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-redux": "^8.0.5",
+    "react-router-dom": "^6.4.1",
+    "react-scripts": "5.0.1",
+    "redux": "^4.2.1",
+    "redux-thunk": "^2.4.2",
+    "sass": "^1.54.9",
+    "steam-totp": "^2.1.2",
+    "steamcommunity": "^3.44.3",
+    "wait-on": "^6.0.1",
+    "web-vitals": "^2.1.4",
+    "yarn": "^1.22.19"
+  },
+  "main": "public/main.js",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "electron:serve": "concurrently -k \"cross-env BROWSER=none yarn start\" \"yarn electron:start\"",
+    "electron:build": "yarn build && electron-builder -c.extraMetadata.main=build/main.js",
+    "electron:start": "wait-on tcp:3000 && electron .",
+    "electron:publish": "yarn build && electron-builder -c.extraMetadata.main=build/main.js build --win --publish always"
   },
   "build": {
-    "appId": "com.sanchoys.marketbot",
-    "icon": "D:/Projects/MarketBot/github/icon.ico",
     "productName": "MarketBot by Sanchoys",
+    "icon": "D:/Projects/marketbot/icon.ico",
     "target": "NSIS",
-    "directories": {
-      "output": "build"
-    },
     "nsis": {
       "allowToChangeInstallationDirectory": true,
       "oneClick": false
+    },
+    "win": {
+      "publish": {
+        "provider": "github",
+        "owner": "AlexandrLeonov",
+        "repo": "marketbot",
+        "private": false,
+        "token": ""
+      }
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "publish": {
+      "provider": "github",
+      "private": false,
+      "owner": "AlexandrLeonov"
     }
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "electron": "^25.3.1",
+    "electron-builder": "^24.4.0",
+    "tailwindcss": "^3.1.8"
   }
 }

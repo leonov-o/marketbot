@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+    font-family: 'Oswald';
+    src: url("./resources/fonts/Oswald-VariableFont_wght.ttf");
+}
+
+
+@font-face {
+    font-family: 'Staatliches';
+    src: url("./resources/fonts/Staatliches-Regular.ttf");
+}
+
+
+.drag {
+    -webkit-user-select: none;
+    -webkit-app-region: drag;
+
+}
+
+.update_btn, .btn {
+    -webkit-user-select: none;
+    -webkit-app-region: no-drag;
+}
+
+@layer base {
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+}

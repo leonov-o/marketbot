@@ -1,39 +1,42 @@
 import React, {useEffect, useState} from 'react';
 import Spinner from "./Spinner";
 
-const UpdateButton = () => {
+let updateListenersAdd = false;
+const UpdateButton = ({settings}) => {
     const [update, onUpdate] = useState(0);
     const [percent, onPercent] = useState(0);
 
     useEffect(()=>{
-        window.ipcRenderer.on("update-not-available", () => {
-            onUpdate(0);
-            console.log("update-not-available");
-        });
-        window.ipcRenderer.on("update-available", () => {
-            console.log("update-available");
-        });
-        window.ipcRenderer.on("checking-for-update", () => {
-            onUpdate(1);
-            console.log("checking-for-update");
-        });
-        window.ipcRenderer.on("download-progress", (event, args) => {
-            onUpdate(2);
-            onPercent(args)
-            console.log("download-progress:"  + args);
-        });
-        window.ipcRenderer.on("update-downloaded", () => {
-            onUpdate(3);
-            console.log("update-downloaded");
-        });
-
+        if(!updateListenersAdd){
+            window.ipcRenderer.on("update-not-available", () => {
+                onUpdate(0);
+                console.log("update-not-available");
+            });
+            window.ipcRenderer.on("update-available", () => {
+                console.log("update-available");
+            });
+            window.ipcRenderer.on("checking-for-update", () => {
+                onUpdate(1);
+                console.log("checking-for-update");
+            });
+            window.ipcRenderer.on("download-progress", (event, args) => {
+                onUpdate(2);
+                onPercent(args)
+                console.log("download-progress:"  + args);
+            });
+            window.ipcRenderer.on("update-downloaded", () => {
+                onUpdate(3);
+                console.log("update-downloaded");
+            });
+            updateListenersAdd = true;
+        }
     }, [])
 
     return (
         <div>
             {update === 1?<UpdateCheck/>:null}
             {update === 2?<UpdateDownload percent={percent}/>:null}
-            {update === 3?<UpdateReady/>:null}
+            {update === 3?<UpdateReady settings={settings}/>:null}
         </div>
     );
 };
@@ -61,11 +64,10 @@ const UpdateDownload = ({percent}) => {
     );
 };
 
-const UpdateReady = () => {
+const UpdateReady = ({settings}) => {
     return (
         <div className="update_btn flex justify-center space-x-1 items-center w-32 h-4 rounded bg-green-600 hover:bg-green-700 transition-all duration-200">
-
-            <div onClick={() => window.ipcRenderer.send("lets-update")} className="text-gray-300" >Установить</div>
+            <div onClick={() => window.ipcRenderer.send("lets-update", {accounts: settings})} className="text-gray-300" >Установить</div>
         </div>
     );
 };

@@ -5,6 +5,7 @@ import maximize from "../resources/icons/maximize.png"
 import close from "../resources/icons/close.png"
 import BugReport from "./BugReport";
 import UpdateButton from "./shared/UpdateButton";
+import {useSelector} from "react-redux";
 
 
 
@@ -12,6 +13,8 @@ import UpdateButton from "./shared/UpdateButton";
 
 
 const Drag = () => {
+    const settings = useSelector(state => state.accounts);
+
     const [bugReport, setBugReport] = useState(false);
 
     const onMinimize = () => {
@@ -23,7 +26,7 @@ const Drag = () => {
     }
 
     const onClose = () => {
-        window.ipcRenderer.send("close");
+        window.ipcRenderer.send("close", {accounts: settings});
     }
 
     return (
@@ -32,9 +35,9 @@ const Drag = () => {
 
             <div className="w-40 flex justify-start space-x-1 text-xs">
                 <div className=" ">
-                    v2.0.0
+                    v2.0.5
                 </div>
-                <UpdateButton/>
+                <UpdateButton settings={settings}/>
             </div>
 
             <div className="">

@@ -8,6 +8,7 @@ require('@electron/remote/main').initialize();
 const userDataPath = app.getPath('userData');
 
 let win;
+let updateTimer = null
 function createWindow() {
     win = new BrowserWindow({
         width: 1130,
@@ -25,13 +26,10 @@ function createWindow() {
         }
     });
     require("@electron/remote/main").enable(win.webContents);
-    win.loadURL("http://localhost:3000");//dev
-    // win.loadURL(path.join(__dirname, "index.html"));//prod
-    let updateTimer = setTimeout(function tick() {
-        autoUpdater.checkForUpdates()
-        updateTimer = setTimeout(tick, 3600000);
-    }, 5000);
+    // win.loadURL("http://localhost:3000");//dev
+    win.loadURL(path.join(__dirname, "index.html"));//prod
 }
+
 
 
 autoUpdater.on('checking-for-update', () => {
@@ -54,19 +52,15 @@ autoUpdater.on('update-downloaded', () => {
     win.webContents.send('update-downloaded');
 });
 
-ipcMain.on('lets-update', () => {
-    const windows = BrowserWindow.getAllWindows();
-    windows.forEach((window) => {
-        window.webContents.send('save-data');
-    });
+ipcMain.on('lets-update', (event, args) => {
+    fs.writeFileSync(path.join(userDataPath, "dataConfig.json"), JSON.stringify(args, null, 2));
     autoUpdater.quitAndInstall();
 });
 
-ipcMain.on('save-data', (event, data) => {
-    fs.writeFileSync(path.join(userDataPath, "dataConfig.json"), JSON.stringify(data, null, 2));
-})
-
-ipcMain.on('close', () => app.quit());
+ipcMain.on('close', (event, args) => {
+    fs.writeFileSync(path.join(userDataPath, "dataConfig.json"), JSON.stringify(args, null, 2));
+    app.quit();
+});
 
 ipcMain.on('minimize-window', () => {
     let window = BrowserWindow.getFocusedWindow();
@@ -79,14 +73,16 @@ ipcMain.on('maximize-window', () => {
         : window.maximize();
 });
 
-
-app.on('ready', createWindow);
+app.on('ready', () => {
+    createWindow();
+    updateTimer = setTimeout(function tick() {
+        autoUpdater.checkForUpdates()
+        updateTimer = setTimeout(tick, 3600000);
+    }, 6000);
+});
 
 app.on('before-quit', () => {
-    const windows = BrowserWindow.getAllWindows();
-    windows.forEach((window) => {
-        window.webContents.send('save-data');
-    });
+
 });
 
 app.on('window-all-closed', () => {

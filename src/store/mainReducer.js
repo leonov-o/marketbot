@@ -364,6 +364,7 @@ export const mainReducer = (state = defaultState, action) => {
             clearTimeout(state.process[action.payload.i].func.monitoring.funcAddress);
             const newState = {...state};
             newState.process[action.payload.i].func.monitoring.funcAddress = null;
+            newState.process[action.payload.i].logs.push(`${new Date().toLocaleTimeString()} "Мониторинг цен" остановлен`);
             return newState;
         }
         case SET_ITEMS: {
@@ -389,6 +390,8 @@ export const mainReducer = (state = defaultState, action) => {
             const newState = {...state};
             newState.process[action.payload.i].func.autobuy.browser = null;
             newState.process[action.payload.i].func.autobuy.funcAddress = null;
+            newState.process[action.payload.i].logs.push(`${new Date().toLocaleTimeString()} "Autobuy" остановлен`);
+            newState.process[action.payload.i].func.autobuy.logs.push(`${new Date().toLocaleTimeString()} Стоп`);
             return newState;
         }
         default:
@@ -459,11 +462,12 @@ export const accountsInitThunkCreator = () => {
                         } = await user.authSteam(getState().accounts[i].authData);
                         const avatarUrl = await user.getUserAvatar(community, steam_id);
                         dispatch(initAccountAction({community, steam_id, session_id, cookies, avatarUrl, i}));
-                        dispatch(startMarketPingPongTimer(i));
-                        dispatch(marketUpdateInventoryThunkCreator(i));
+                        dispatch(startMarketPingPongTimerThunkCreator(i));
+                        dispatch(marketUpdateInventoryTimerThunkCreator(i));
                         dispatch(setGetMarketStatusTimerThunkCreator(i));
                         dispatch(setUpdateBalanceTimerThunkCreator(i));
                         dispatch(getMarketBuyHistoryThunkCreator(i));
+                        dispatch(startSteamTradeAcceptWhenItemSoldTimerThunkCreator(i));
                         dispatch(startSteamTradeAcceptTimerThunkCreator(i));
                         dispatch(onErrorAction(i, null));
                         dispatch(onLoadingAction(i, false));
@@ -483,27 +487,34 @@ export const accountsInitThunkCreator = () => {
     }
 }
 
-export const startMarketPingPongTimer = (i) => {
+export const startMarketPingPongTimerThunkCreator = (i) => {
     return async (dispatch, getState) => {
         const logging = (log) => dispatch(onLogsAddAction(i, log));
         let timerId = setTimeout(async function tick() {
-            const online = await user.marketPingPong(getState().accounts[i].authData.marketApi);
-            if (online)
-                logging("Поддержание онлайна: да")
-            else
-                logging("Поддержание онлайна: нет")
+            try{
+                const online = await user.marketPingPong(getState().accounts[i].authData.marketApi);
+                if (online)
+                    logging("Поддержание онлайна: да")
+                else
+                    logging("Поддержание онлайна: нет")
+            }catch (e) {
+                console.log(`startMarketPingPongTimeThunkCreator error: ${e}`)
+            }
             timerId = setTimeout(tick, 180000);
         }, 1000);
     }
 }
 
-export const marketUpdateInventoryThunkCreator = (i) => {
+export const marketUpdateInventoryTimerThunkCreator = (i) => {
     return async (dispatch, getState) => {
-        try {
-            await user.marketUpdateInventory(getState().accounts[i].authData.marketApi);
-        } catch (e) {
-            console.log(`marketUpdateInventoryThunkCreator error: ${e}`)
-        }
+        let timerId = setTimeout(async function tick() {
+            try {
+                await user.marketUpdateInventory(getState().accounts[i].authData.marketApi);
+            } catch (e) {
+                console.log(`marketUpdateInventoryTimerThunkCreator error: ${e}`)
+            }
+            timerId = setTimeout(tick, 3600000);
+        }, 2500);
     }
 }
 export const getMarketBalanceThunkCreator = (i) => {
@@ -577,8 +588,8 @@ export const setUpdateBalanceTimerThunkCreator = (i) => {
             dispatch(getSteamBalanceThunkCreator(i));
             dispatch(getInventoryCostThunkCreator(i));
             dispatch(getSteamMarketLotsThunkCreator(i))
-            timerId = setTimeout(tick, 1800000);
-        }, 500);
+            timerId = setTimeout(tick, 7200000);
+        }, 2000);
     }
 }
 
@@ -603,20 +614,40 @@ export const setGetMarketStatusTimerThunkCreator = (i) => {
     }
 }
 
+
+export const startSteamTradeAcceptWhenItemSoldTimerThunkCreator = (i) => {
+    return async (dispatch, getState) => {
+        const marketApi = getState().accounts[i].authData.marketApi;
+        const community = getState().process[i].community;
+        const identity_secret = getState().accounts[i].authData.identity_secret;
+        const logging = (log) => dispatch(onLogsAddAction(i, log));
+
+        let timerId = setTimeout(async function tick() {
+            try{
+                if(community)
+                    await user.steamTradeAcceptWhenItemSold(marketApi, community, identity_secret, logging);
+            }catch (e) {
+                console.log(`startSteamTradeAcceptWhenItemSoldTimerThunkCreator ${e.message}`);
+            }
+            timerId = setTimeout(tick, 60000); // (*)
+        }, 2000);
+
+    }
+}
 export const startSteamTradeAcceptTimerThunkCreator = (i) => {
     return async (dispatch, getState) => {
         const community = getState().process[i].community;
         const identity_secret = getState().accounts[i].authData.identity_secret;
         const logging = (log) => dispatch(onLogsAddAction(i, log));
-
-        if (community) {
-            let timerId = setTimeout(async function tick() {
-                await user.steamTradeAccept(community, identity_secret, logging);
-                timerId = setTimeout(tick, 60000); // (*)
-            }, 2000);
-        } else {
-            await new Promise(r => setTimeout(r, 5000));
-        }
+        let timerId = setTimeout(async function tick() {
+            try{
+                if(community)
+                    await user.steamTradeAccept(community, identity_secret, logging);
+            }catch (e) {
+                console.log(`startSteamTradeAcceptTimerThunkCreator ${e.message}`);
+            }
+            timerId = setTimeout(tick, 600000); // (*)
+        }, 30000);
     }
 }
 
@@ -643,14 +674,17 @@ export const startMonitoringTimerThunkCreator = (i) => {
         let timerId = setTimeout(async function tick() {
             dispatch(startMonitoringAction(i, timerId));
             try {
-                await user.monitoringPrices(getState().accounts[i].authData.marketApi, getState().process[i].func.monitoring.items, logging)
-
+                const result = await user.monitoringPrices(getState().accounts[i].authData.marketApi, getState().process[i].func.monitoring.items, logging);
+                if(result === "NO_ITEMS"){
+                    dispatch(stopMonitoringAction(i));
+                }
             } catch (e) {
                 console.log(`startMonitoringTimerThunkCreator ${e.message}`);
             }
-            if (getState().process[i].func.monitoring.funcAddress)
+            if (getState().process[i].func.monitoring.funcAddress){
                 timerId = setTimeout(tick, 15000);
-            dispatch(startMonitoringAction(i, timerId));
+                dispatch(startMonitoringAction(i, timerId));
+            }
         }, 1000);
     }
 }
@@ -693,7 +727,7 @@ export const startAutobuyTimerThunkCreator = (i) => {
         try {
             const {browser, page} = await user.autobuyBrowserStart();
             dispatch(autobuyBrowserStartAction(i, browser));
-            await user.autobuyAuth(getState().process[i].session_id, page, loggingAutobuy);
+            await user.autobuyAuth(getState().accounts[i].authData, page, loggingAutobuy);
             let timerId = setTimeout(async function tick() {
                 dispatch(startAutobuyAction(i, timerId));
                 try {
@@ -702,9 +736,10 @@ export const startAutobuyTimerThunkCreator = (i) => {
                 } catch (e) {
                     console.log(`startAutobuyTimerThunkCreator ${e.message}`);
                 }
-                if (getState().process[i].func.autobuy.browser)
+                if (getState().process[i].func.autobuy.browser){
                     timerId = setTimeout(tick, 5000);
-                dispatch(startAutobuyAction(i, timerId));
+                    dispatch(startAutobuyAction(i, timerId));
+                }
             }, 1000);
         } catch (e) {
             console.log(`startAutobuyTimerThunkCreator ${e.message}`);

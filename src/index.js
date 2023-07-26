@@ -6,10 +6,6 @@ import "./index.css"
 import {Provider} from "react-redux";
 import {store} from "./store/index";
 
-window.ipcRenderer.on('save-data', () => {
-    const data = {accounts: store.getState().accounts}
-    window.ipcRenderer.send('save-data', data);
-});
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(

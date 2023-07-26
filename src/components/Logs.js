@@ -14,7 +14,7 @@ const Logs = ({selected}) => {
 
     const logs = logsEntry.map((item, i) => {
         return (
-            <li key={i} className="after:block after:content-[''] after:h-0.5 after:bg-blue-100 after:shadow-2xl after:mt-0.5">
+            <li key={i} className="after:block after:content-[''] after:h-0.5 after:bg-blue-100 after:shadow-2xl after:mt-0.5 whitespace-pre-wrap">
                 <div className="text-xs">{item}</div>
             </li>
         );

@@ -96,7 +96,26 @@ class User {
             return json.success;
         }
     }
-
+    async steamTradeAcceptWhenItemSold(marketApi, community, identity_secret, logging) {
+        const url = "https://market.csgo.com/api/v2/trades/?key=";
+        for (let i = 0; i < 5; i++) {
+            const res = await fetch(url + marketApi);
+            if (!res.ok) {
+                console.log(`steamTradeAcceptWhenItemSold statusCode: ${res.status} statusText: ${res.statusText}`);
+                await this.sleep(1000);
+                continue;
+            }
+            const json = await res.json();
+            console.log(json);
+            if(json.success && json.trades){
+                if(json.trades.find((elem) => elem.dir === "in")){
+                    await this.steamTradeAccept(community, identity_secret, logging);
+                }
+            }
+            return json.status;
+        }
+        throw new Error("Произошла ошибка подтверждении обмена market.csgo.com");
+    }
     async steamTradeAccept(community, identity_secret, logging) {
         return new Promise((resolve, reject) => {
             let time = SteamTotp.time();
@@ -116,8 +135,6 @@ class User {
                     }
                     logging(logText)
                 }
-
-
                 resolve(confs);
             })
         }).then(res => (res)).catch(err => logging(err));
@@ -291,7 +308,7 @@ class User {
     }
 
 
-    async _getPriceSteam(market_hash_name) {
+    async _getPriceSteam(market_hash_name) {//todo добавить куки , мб лимитов будет меньше
         const priceOverviewSteam = "https://steamcommunity.com/market/priceoverview/?country=RU&currency=5&appid=730&market_hash_name=" + encodeURIComponent(market_hash_name);
         const headers = {
             //'If-Modified-Since': new Date().toUTCString(),
@@ -505,6 +522,10 @@ class User {
             return;
         }
         let json = await res.json();
+        console.log(json);
+        if(json.items == null){
+            return 'NO_ITEMS';
+        }
         for (let i = 0; i < json["items"].length; i++) {
             const {market_hash_name, classid, instanceid, status, price} = json["items"][i];
             const currentItem = itemsData.find((elem) => (elem.name === market_hash_name));
@@ -567,7 +588,7 @@ class User {
 
                 let minPriceResponse = await fetch(encodeURI(`https://market.csgo.com/api/v2/search-item-by-hash-name?key=${marketApi}&hash_name=${market_hash_name}`));
                 if (!minPriceResponse.ok) {
-                    await this.sleep(500);
+                    await this.sleep(1000);
                     if (attempt < 5) {
                         attempt++
                         i--;
@@ -576,7 +597,8 @@ class User {
                 }
                 attempt = 0;
                 let minPriceJson = await minPriceResponse.json();
-                let minPrice = minPriceJson["data"][0]["price"] / 100;
+                console.log(minPriceJson)
+                let minPrice = minPriceJson["data"][0] && minPriceJson["data"][0]["price"] / 100;
 
                 itemList.push({
                     name: market_hash_name,
@@ -625,28 +647,54 @@ class User {
         let browser = await puppeteer.launch({
             executablePath: executablePath,
             headless: true,
-            args: ['--start-fullscreen']
+            args: ['--start-fullscreen', '--disable-web-security']
         });
         let page = await browser.newPage();
         return {browser, page};
     }
 
 
-    async autobuyAuth(session_id, page, loggingAutobuy) {
-        loggingAutobuy("Авторизация Altskins.com...");
-        const headers = {
-            ...this.defaultHeaders,
-            'Cookie': session_id.join(";")
-        }
-        await page.setExtraHTTPHeaders(headers);
-        await page.goto('https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Ftable.altskins.com%2Flogin%2Fsteam&openid.realm=http%3A%2F%2Ftable.altskins.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select'); //переходим по ссылке для входа
+    async autobuyAuth(authData, page, loggingAutobuy) {
+        // const headers = {
+        //     ...this.defaultHeaders,
+        //     'Cookie': session_id.join(";")
+        // }
+        // await page.setExtraHTTPHeaders(headers);
+        // await page.goto('https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Ftable.altskins.com%2Flogin%2Fsteam&openid.realm=http%3A%2F%2Ftable.altskins.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select'); //переходим по ссылке для входа
 
+        // await page.waitForTimeout(1500);
+        // await page.waitForSelector('#imageLogin'); //ждем кнопку входа в Стиме
+        // await page.waitForTimeout(1500);
+        // await page.setExtraHTTPHeaders(headers);
+        // await page.click('#imageLogin'); //кликаем на нее
+        // await page.waitForTimeout(6000);
+        // await page.waitForSelector('img.header-avatar');
+        // loggingAutobuy("Успешно.");
+
+        const {login, password, shared_secret} = authData;
+        loggingAutobuy("Авторизация Steam...");
+        await page.goto('https://steamcommunity.com/login/home'); //переходим по ссылке для авторизации
+        await page.waitForSelector(".newlogindialog_LoginForm_3Tsg9"); //ждем пока загрузится форма для вписывания логина/пароля
+        await page.waitFor(1000); //просто ждем 1 секунду
+        await page.click('.newlogindialog_TextField_2KXGK:first-child input'); //кликаем на поле, куда нужно вписывать логин
+        await page.type(".newlogindialog_TextField_2KXGK:first-child input", login); //вписываем сам логин
+        await page.click('.newlogindialog_TextField_2KXGK:nth-child(2) input'); //кликаем на поле, куда нужно вписывать пароль
+        await page.type(".newlogindialog_TextField_2KXGK:nth-child(2) input", password); //вписываем сам пароль
+        await page.waitForTimeout(1000); //ждем 1 секунду
+        await page.click('.newlogindialog_SignInButtonContainer_14fsn .newlogindialog_SubmitButton_2QgFE'); //кликаем на кнопку "войти"
+        await page.waitForSelector(".segmentedinputs_SegmentedCharacterInput_3PDBF"); //ждем пока прогрузится окно для ввода гуард кода
+        await page.focus(".segmentedinputs_SegmentedCharacterInput_3PDBF > input:nth-child(1)");
+        await page.waitForTimeout(2000); //ждем 1 секунду
+        await page.keyboard.type(this.generateAuthCode(shared_secret));
+        await page.waitForTimeout(6000);
+        await page.waitForSelector('#global_actions > a > img');
+        loggingAutobuy("Успешно.");
+        loggingAutobuy("Авторизация Altskins.com...");
+        await page.goto('https://table.altskins.com/login/steam'); //переходим по ссылке для входа
         await page.waitForTimeout(1500);
         await page.waitForSelector('#imageLogin'); //ждем кнопку входа в Стиме
         await page.waitForTimeout(1500);
         await page.click('#imageLogin'); //кликаем на нее
-        await page.setExtraHTTPHeaders(headers);
-
         await page.waitForTimeout(6000);
         await page.waitForSelector('img.header-avatar');
         loggingAutobuy("Успешно.");

@@ -1,6 +1,6 @@
 {
   "name": "marketbotv2",
-  "version": "2.0.0",
+  "version": "2.0.5",
   "private": false,
   "author": "Sanchoys",
   "license": "ISC",
@@ -19,7 +19,7 @@
     "cross-env": "^7.0.3",
     "electron-updater": "^6.1.1",
     "node-fetch": "2.6.7",
-    "puppeteer": "^20.9.0",
+    "puppeteer": "10.4.0",
     "puppeteer-extra": "^3.3.6",
     "puppeteer-extra-plugin-stealth": "^2.11.2",
     "react": "^18.2.0",
@@ -60,8 +60,7 @@
         "provider": "github",
         "owner": "AlexandrLeonov",
         "repo": "marketbot",
-        "private": false,
-        "token": ""
+        "private": false
       }
     },
     "files": [

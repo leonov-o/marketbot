@@ -22,6 +22,14 @@ const SetItems = ({selected}) => {
             description: "Подставляет большую между минимальной ценой на market.csgo и ценой покупки",
             id: "autoSetHigherPrice",
             checked: data.autoSetHigherPrice,
+            disabled: process.onLoading || process.func
+        },
+        {
+            text: "Автоматически запускать \"Выставление предметов\"",
+            description: "\"Выставление предметов\" будет автоматически обновлять предметы и выставлять на продажу раз в 6 часов. Доступна при включенной функции автоматической подстановки цены.",
+            id: "autoSetItemsStart",
+            checked: data.autoSetItemsStart,
+            disabled: process.onLoading || process.func || !data.autoSetHigherPrice
         }
     ];
 
@@ -82,7 +90,7 @@ const SetItems = ({selected}) => {
                         <Spinner className={"w-6 h-6 mt-6 mx-auto border-blue-600"}/>}
 
                     {checkboxWithQuestion.map((item, i) => (
-                        <CheckboxWithQuestion key={i} text={item.text} description={item.description} disabled={process.onLoading || process.func} id={item.id} onChange={setCheckboxValue}
+                        <CheckboxWithQuestion key={i} text={item.text} description={item.description} disabled={item.disabled} id={item.id} onChange={setCheckboxValue}
                                               checked={item.checked}/>
                     ))}
 

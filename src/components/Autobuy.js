@@ -5,6 +5,7 @@ import Header from "./shared/Header";
 import {useDispatch, useSelector} from "react-redux";
 import {changeFieldValueAction, startAutobuyTimerThunkCreator, stopAutobuyAction} from "../store/mainReducer";
 import Checkbox from "./shared/Checkbox";
+import CheckboxWithQuestion from "./shared/CheckboxWithQuestion";
 
 const Autobuy = ({selected}) => {
     const data = useSelector(state => state.accounts[selected]["funcSaves"]["autobuy"]["fields"]);
@@ -18,13 +19,25 @@ const Autobuy = ({selected}) => {
         scrollToBottom()
     });
     const dispatch = useDispatch();
-    // const checkboxWithQuestion = [
-    //     {
-    //         text: "Динамический мин. %",
-    //         id: "dynamicPercent",
-    //         checked: data.dynamicPercent,
-    //     }
-    // ];
+    const checkboxWithQuestion = [
+        // {
+        //     text: "Динамический мин. %",
+        //     id: "dynamicPercent",
+        //     checked: data.dynamicPercent,
+        // },
+        {
+            text: "Автоматическая продажа предметов",
+            description: "Продажа купленных предметов на 0.05 руб. ниже минимальной цены.",
+            id: "autoSell",
+            checked: data.autoSell,
+        },
+        {
+            text: "Aвтоматическая подстановка поля \"Мин. %\" максимальным значением в таблице",
+            description: "Выбирает процент самого верхнего предмета в таблице и подставляет в поле \"Мин. %\".",
+            id: "autoSetMaxPercentFromTable",
+            checked: data.autoSetMaxPercentFromTable,
+        }
+    ];
 
     const checkbox = [
         {
@@ -142,9 +155,27 @@ const Autobuy = ({selected}) => {
                                 }}>Стоп</Button>
                     </div>
 
-                    {/*{checkboxWithQuestion.map((item,i)=>(*/}
-                    {/*    <CheckboxWithQuestion key={i} disabled={process.browser} text={item.text} id={item.id} onChange={setCheckboxValue} checked={item.checked}/>*/}
-                    {/*))}*/}
+
+
+                    {checkboxWithQuestion.map((item, i) => (
+                        <CheckboxWithQuestion key={i} disabled={process.browser} text={item.text}
+                                              description={item.description} id={item.id} onChange={setCheckboxValue}
+                                              checked={item.checked}/>
+                    ))}
+
+                    <CheckboxWithQuestion text={"Автоматически запускать \"Autobuy\" при балансе"}
+                                          description={"\"Autobuy\" будет автоматически включаться по выставленным параметрам раз в 6 часов. Важно, чтобы поле \"Мин. %\" было заполнено, либо воспользуйтесь функцией автоматической подстановки поля \"Мин. %\" максимальным значением в таблице."}
+                                          id="autoAutobuyStart"
+                                          onChange={setCheckboxValue}
+                                          disabled={process.browser}
+                                          checked={data.autoAutobuyStart}/>
+                    <div className="mt-2 flex justify-end space-x-4">
+                        <div className={"text-sm"}>от</div>
+                        <input id="autoAutobuyStartValue" onChange={setFieldValue} value={data.autoAutobuyStartValue}
+                               className="w-16 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                               type="text" disabled={process.browser || !data.autoAutobuyStart}/>
+                        <div className={"text-sm"}> RUB</div>
+                    </div>
 
                     <div className="flex items-center space-x-2 mt-4">
                         {checkbox.map((item, i) => (

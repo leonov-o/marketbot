@@ -96,6 +96,7 @@ class User {
             return json.success;
         }
     }
+
     async steamTradeAcceptWhenItemSold(marketApi, community, identity_secret, logging) {
         const url = "https://market.csgo.com/api/v2/trades/?key=";
         for (let i = 0; i < 5; i++) {
@@ -107,8 +108,8 @@ class User {
             }
             const json = await res.json();
             console.log(json);
-            if(json.success && json.trades){
-                if(json.trades.find((elem) => elem.dir === "in")){
+            if (json.success && json.trades) {
+                if (json.trades.find((elem) => elem.dir === "in")) {
                     await this.steamTradeAccept(community, identity_secret, logging);
                 }
             }
@@ -116,6 +117,7 @@ class User {
         }
         throw new Error("Произошла ошибка подтверждении обмена market.csgo.com");
     }
+
     async steamTradeAccept(community, identity_secret, logging) {
         return new Promise((resolve, reject) => {
             let time = SteamTotp.time();
@@ -212,7 +214,9 @@ class User {
     async getInventoryCost(steam_id, session_id) { //returns Steam inventory cost
         const inventoryUrl = `https://steamcommunity.com/inventory/${steam_id}/730/2?l=russian&count=5000`;
 
-        const {inventory, tradable} = await this._getInventory(inventoryUrl, session_id);
+        const json = await this._getInventory(inventoryUrl, session_id);
+        const inventory = this._getAmount(json);
+        const tradable = this._getTradable(json);
         if (!inventory)
             return {inv_cost: 0, tradable: 0};
         let inv_length = 0;
@@ -223,7 +227,7 @@ class User {
         let inv_cost = 0;
         for (let i = 0; i < inventory.length; i++) {
             try {
-                inv_cost += await this._getPriceSteam(inventory[i][0]) * inventory[i][1];
+                inv_cost += await this._getPriceSteam(session_id, inventory[i][0]) * inventory[i][1];
             } catch (e) {
             }
         }
@@ -246,11 +250,7 @@ class User {
                 continue;
             }
 
-            const json = await res.json();
-            return {
-                inventory: this._getAmount(json),
-                tradable: this._getTradable(json)
-            }
+            return await res.json();
         }
         throw new Error("Произошла ошибка при получении инвентаря steamcommunity.com");
     }
@@ -308,10 +308,11 @@ class User {
     }
 
 
-    async _getPriceSteam(market_hash_name) {//todo добавить куки , мб лимитов будет меньше
+    async _getPriceSteam(session_id, market_hash_name) {
         const priceOverviewSteam = "https://steamcommunity.com/market/priceoverview/?country=RU&currency=5&appid=730&market_hash_name=" + encodeURIComponent(market_hash_name);
         const headers = {
             //'If-Modified-Since': new Date().toUTCString(),
+            Cookie: session_id.join(";"),
             'X-Requested-With': 'XMLHttpRequest',
             // 'Referer': `https://steamcommunity.com/profiles/${this.steam_id}/inventory/`
         }
@@ -523,7 +524,7 @@ class User {
         }
         let json = await res.json();
         console.log(json);
-        if(json.items == null){
+        if (json.items == null) {
             return 'NO_ITEMS';
         }
         for (let i = 0; i < json["items"].length; i++) {
@@ -700,9 +701,32 @@ class User {
         loggingAutobuy("Успешно.");
     }
 
-    async autobuy(marketApi, settings, page, loggingAutobuy) {
-        const {
-            dynamicPercent,
+    async maxPercentInTableForAutobuy(settings, page) {
+        let {
+            knife,
+            stattrak,
+            souvenir,
+            sticker,
+            maxPercent,
+            minPrice,
+            maxPrice,
+            salesFilter
+        } = settings;
+        let table_link = "https://table.altskins.com/ru/site/items?ItemsFilter%5Bknife%5D=0&ItemsFilter%5Bknife%5D=" + Number(knife) + "&ItemsFilter%5Bstattrak%5D=0&ItemsFilter%5Bstattrak%5D=" + Number(stattrak) + "&ItemsFilter%5Bsouvenir%5D=0&ItemsFilter%5Bsouvenir%5D=" + Number(souvenir) + "&ItemsFilter%5Bsticker%5D=0&ItemsFilter%5Bsticker%5D=" + Number(sticker) + "&ItemsFilter%5Btype%5D=1&ItemsFilter%5Bservice1%5D=showtm&ItemsFilter%5Bservice2%5D=showsteama&ItemsFilter%5Bunstable1%5D=1&ItemsFilter%5Bunstable2%5D=1&ItemsFilter%5Bhours1%5D=192&ItemsFilter%5Bhours2%5D=192&ItemsFilter%5BpriceFrom1%5D=" + minPrice + "&ItemsFilter%5BpriceTo1%5D=" + maxPrice + "&ItemsFilter%5BpriceFrom2%5D=&ItemsFilter%5BpriceTo2%5D=&ItemsFilter%5BsalesBS%5D=&ItemsFilter%5BsalesTM%5D=&ItemsFilter%5BsalesST%5D=" + salesFilter + "&ItemsFilter%5Bname%5D=&ItemsFilter%5Bservice1Minutes%5D=&ItemsFilter%5Bservice2Minutes%5D=&ItemsFilter%5BpercentFrom1%5D=" + "&ItemsFilter%5BpercentFrom2%5D=&ItemsFilter%5Btimeout%5D=5&ItemsFilter%5Bservice1CountFrom%5D=1&ItemsFilter%5Bservice1CountTo%5D=&ItemsFilter%5Bservice2CountFrom%5D=1&ItemsFilter%5Bservice2CountTo%5D=&ItemsFilter%5BpercentTo1%5D=" + maxPercent + "&ItemsFilter%5BpercentTo2%5D=";
+        await page.goto(table_link);
+        await page.waitForTimeout(3000);
+        let skins = await page.$$('tr.tr');
+        if(skins && skins.length){
+            const skin_percent_selector = await skins[0].$("td.tmsteama_class > div.percent");
+            const skin_percent = await (await skin_percent_selector.getProperty('textContent')).jsonValue();
+            return Number(skin_percent.replace("%", "")).toFixed(0);
+        }else{
+            return "100";
+        }
+    }
+
+    async autobuy(marketApi, settings, page, loggingAutobuy, isAutoSold, addPurchaseItem) {
+        let {
             knife,
             stattrak,
             souvenir,
@@ -714,10 +738,11 @@ class User {
             salesFilter,
             balanceLimit
         } = settings;
+
         let table_link = "https://table.altskins.com/ru/site/items?ItemsFilter%5Bknife%5D=0&ItemsFilter%5Bknife%5D=" + Number(knife) + "&ItemsFilter%5Bstattrak%5D=0&ItemsFilter%5Bstattrak%5D=" + Number(stattrak) + "&ItemsFilter%5Bsouvenir%5D=0&ItemsFilter%5Bsouvenir%5D=" + Number(souvenir) + "&ItemsFilter%5Bsticker%5D=0&ItemsFilter%5Bsticker%5D=" + Number(sticker) + "&ItemsFilter%5Btype%5D=1&ItemsFilter%5Bservice1%5D=showtm&ItemsFilter%5Bservice2%5D=showsteama&ItemsFilter%5Bunstable1%5D=1&ItemsFilter%5Bunstable2%5D=1&ItemsFilter%5Bhours1%5D=192&ItemsFilter%5Bhours2%5D=192&ItemsFilter%5BpriceFrom1%5D=" + minPrice + "&ItemsFilter%5BpriceTo1%5D=" + maxPrice + "&ItemsFilter%5BpriceFrom2%5D=&ItemsFilter%5BpriceTo2%5D=&ItemsFilter%5BsalesBS%5D=&ItemsFilter%5BsalesTM%5D=&ItemsFilter%5BsalesST%5D=" + salesFilter + "&ItemsFilter%5Bname%5D=&ItemsFilter%5Bservice1Minutes%5D=&ItemsFilter%5Bservice2Minutes%5D=&ItemsFilter%5BpercentFrom1%5D=" + minPercent + "&ItemsFilter%5BpercentFrom2%5D=&ItemsFilter%5Btimeout%5D=5&ItemsFilter%5Bservice1CountFrom%5D=1&ItemsFilter%5Bservice1CountTo%5D=&ItemsFilter%5Bservice2CountFrom%5D=1&ItemsFilter%5Bservice2CountTo%5D=&ItemsFilter%5BpercentTo1%5D=" + maxPercent + "&ItemsFilter%5BpercentTo2%5D="
         await page.goto(table_link);
         await page.waitForTimeout(3000);
-
+        const purchasedItemsId = [];
         let balance = await this.getMarketBalance(marketApi);//обновление баланса
         await console.log("Balance: " + balance);
 
@@ -731,7 +756,7 @@ class User {
             console.log(skin_name + ":" + skin_price);
             let skin_price_penny = Math.ceil(skin_price) * 100;
             console.log("Skin: " + skin_name + " Round price: " + skin_price_penny);
-            for (; ;) {//без ограничение количество покупок одного предмета
+            for (let i = 0; i < 10; i++) {//ограничение количество покупок одного предмета
                 if ((balance - Math.ceil(skin_price)) <= balanceLimit) {
                     console.log("skip item");
                     break;
@@ -747,6 +772,7 @@ class User {
                 console.log(json);
                 if (json["success"]) {
                     loggingAutobuy("Куплен: " + skin_name + " Цена покупки: " + skin_price + " RUB");
+                    purchasedItemsId.push(json.id);
                     balance -= Math.ceil(skin_price);
                 } else {
                     break
@@ -754,8 +780,111 @@ class User {
             }
             await this.sleep(1000);
         }
+        if (isAutoSold && purchasedItemsId.length) {//check purchased items trades info
+            const url = `https://market.csgo.com/api/v2/items?key=${marketApi}`;
+            for (let attempt = 0; attempt < 3; attempt++) {
+                let res = await fetch(encodeURI(url));
+                if (!res.ok) {
+                    await this.sleep(2000);
+                    continue
+                }
+                let json = await res.json();
+                if (json.success) {
+                    for (let id of purchasedItemsId) {
+                        for (let item of json.items) {
+                            if (item.status === "3" || item.status === "4") {
+                                if (item["item_id"] === id)
+                                    addPurchaseItem({
+                                        market_hash_name: item.market_hash_name,
+                                        assetid: item.assetid,
+                                        classid: item.classid,
+                                        instanceid: item.instanceid,
+                                        real_instance: item.real_instance
+                                    });
+                            }
+                        }
+                    }
+                }
+                break;
+            }
+        }
     }
 
+    async autoSellPurchasedItems(community, steam_id, cookies, session_id, purchasedItems, logging, removeItem) {
+        const inventoryUrl = `https://steamcommunity.com/inventory/${steam_id}/730/2?l=russian&count=5000`;
+        const filteredPurchaseItems = [];
+        console.log(purchasedItems);
+        for (let item of purchasedItems) {
+            const itemInFiltered = filteredPurchaseItems.find((elem) => elem.market_hash_name === item.market_hash_name && elem.real_instance === item.real_instance);
+            if (itemInFiltered) {
+                itemInFiltered.amount++;
+            } else {
+                filteredPurchaseItems.push({
+                    ...item,
+                    amount: 1
+                })
+            }
+        }
+        console.log(filteredPurchaseItems);
+        const inventoryJson = await this._getInventory(inventoryUrl, session_id);
+        let logText = "Проданы предметы:\n";
+        for (let item of filteredPurchaseItems) {
+            const inventoryItem = inventoryJson.descriptions.find((elem) => elem.market_hash_name === item.market_hash_name && elem.instanceid === item.real_instance);
+            if (inventoryItem) {
+                const itemLowestPrice = await this._getPriceSteam(session_id, item.market_hash_name);
+                if (itemLowestPrice) {
+                    const sellPrice = Number((itemLowestPrice - 0.05).toFixed(2));
+                    const {classid} = inventoryItem;
+                    const assetItems = inventoryJson.assets.filter((elem) => elem.classid === classid && elem.instanceid === item.real_instance);
+                    if (assetItems && assetItems.length) {
+                        for (let i = 0; i < item.amount, i < assetItems.length; i++) {
+                            const {assetid} = assetItems[i];
+                            const result = await this.itemSaleSteam(community, steam_id, cookies, session_id, assetid, sellPrice);
+                            console.log(result)
+                            if (result.success) {
+                                console.log(`SOlD ${item.market_hash_name} ${assetid} Price: ${itemLowestPrice} SoldPrice: ${sellPrice}`);
+                                removeItem(item.real_instance, item.market_hash_name);
+                                logText += `${item.market_hash_name} Цена: ${sellPrice}\n`;
+                            }
+                            await this.sleep(3000);
+                        }
+                    }
+                }
+            }
+        }
+        logging(logText);
+    }
+
+    async itemSaleSteam(community, steam_id, cookies, session_id, assetid, price) {
+        return new Promise((resolve, reject) => {
+            const newPrice = Number(((price * 100) / 1.15).toFixed(0));
+            let requestOptions = {
+                form: {
+                    "sessionid": cookies,
+                    "appid": "730",
+                    "contextid": "2",
+                    "assetid": assetid,
+                    "amount": 1,
+                    "price": newPrice + ''
+                },
+                headers: {
+                    'Origin': 'https://steamcommunity.com',
+                    'Referer': 'https://steamcommunity.com/profiles/' + steam_id + '/inventory/',
+                    'Cookie': session_id,
+                    "Host": "steamcommunity.com"
+                },
+                json: true
+            }
+
+            community.httpRequestPost("https://steamcommunity.com/market/sellitem/", requestOptions, (err, response, json) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(json);
+                }
+            }, "steamcommunity");
+        }).then(res => res).catch(err => err);
+    }
 }
 
 export const user = new User();

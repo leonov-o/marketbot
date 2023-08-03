@@ -35,7 +35,7 @@ const Drag = () => {
 
             <div className="w-40 flex justify-start space-x-1 text-xs">
                 <div className=" ">
-                    v2.0.5
+                    v2.0.6
                 </div>
                 <UpdateButton settings={settings}/>
             </div>

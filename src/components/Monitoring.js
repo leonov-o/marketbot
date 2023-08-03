@@ -61,28 +61,36 @@ const Monitoring = ({selected}) => {
                     </div>
                     <div className="text-xs float-right space-y-px mt-1">
                         <Button onClick={() => dispatch(pasteMonitoringItemsValueAction(selected))}
-                                buttonStyle="w-24 h-6" disabled={process.funcAddress || process.onLoading}>Вставить</Button>
+                                buttonStyle="w-24 h-6"
+                                disabled={process.funcAddress || process.onLoading}>Вставить</Button>
                         <Button onClick={() => dispatch(saveMonitoringItemsValueAction(selected))}
-                                buttonStyle="w-24 h-6" disabled={process.funcAddress || process.onLoading}>Сохранить</Button>
+                                buttonStyle="w-24 h-6"
+                                disabled={process.funcAddress || process.onLoading}>Сохранить</Button>
                     </div>
                 </div>
 
                 <div className="mt-10 w-52 ml-7 text-sm">
-                    <Button buttonStyle={"w-52 h-9"} disabled={process.funcAddress || process.onLoading} onClick={() => {
-                        dispatch(getMonitoringItemsThunkCreator(selected))
-                    }}>Обновить выставленые предметы</Button>
+                    <Button buttonStyle={"w-52 h-9"} disabled={process.funcAddress || process.onLoading}
+                            onClick={() => {
+                                dispatch(getMonitoringItemsThunkCreator(selected))
+                            }}>Обновить выставленые предметы</Button>
                     <div className="flex justify-between mt-2">
-                        <Button buttonStyle={"w-16 h-9"} disabled={process.funcAddress || process.onLoading} onClick={() => {
-                            dispatch(startMonitoringTimerThunkCreator(selected))
-                        }}>Старт</Button>
+                        <Button buttonStyle={"w-16 h-9"} disabled={process.funcAddress || process.onLoading}
+                                onClick={() => {
+                                    dispatch(startMonitoringTimerThunkCreator(selected))
+                                }}>Старт</Button>
                         <div
                             className={`w-8 h-8 rounded-full ${process.funcAddress ? "bg-green-500" : "bg-red-500"}`}></div>
                         <Button buttonStyle={"w-16 h-9"} disabled={process.onLoading} onClick={() => {
                             dispatch(stopMonitoringAction(selected))
                         }}>Стоп</Button>
                     </div>
-                    <CheckboxWithQuestion text="Автоматически подставлять мин. порог" description={"Подставляет минимальный порог на N руб. ниже цены покупки"} id="autoMinLimit"
-                                          onChange={setCheckboxValue} disabled={process.funcAddress || process.onLoading} checked={data.autoMinLimit}/>
+                    <CheckboxWithQuestion text="Автоматически подставлять мин. порог"
+                                          description={"Подставляет минимальный порог на N руб. ниже цены покупки"}
+                                          id="autoMinLimit"
+                                          onChange={setCheckboxValue}
+                                          disabled={process.funcAddress || process.onLoading}
+                                          checked={data.autoMinLimit}/>
                     <div className="mt-2 flex justify-start space-x-2">
                         <div>-</div>
                         <input id="autoMinLimitValue" onChange={setInputValue} value={data.autoMinLimitValue}
@@ -90,8 +98,12 @@ const Monitoring = ({selected}) => {
                                type="text" disabled={!data.autoMinLimit || process.funcAddress || process.onLoading}/>
                         <div> RUB</div>
                     </div>
-                    <CheckboxWithQuestion text="Автоматически подставлять макс. порог" description={"Подставляет максимальный порог на N руб. выше цены покупки"} id="autoMaxLimit"
-                                          onChange={setCheckboxValue} disabled={process.funcAddress || process.onLoading} checked={data.autoMaxLimit}/>
+                    <CheckboxWithQuestion text="Автоматически подставлять макс. порог"
+                                          description={"Подставляет максимальный порог на N руб. выше цены покупки"}
+                                          id="autoMaxLimit"
+                                          onChange={setCheckboxValue}
+                                          disabled={process.funcAddress || process.onLoading}
+                                          checked={data.autoMaxLimit}/>
                     <div className="mt-2 flex justify-start space-x-2">
                         <div>+</div>
                         <input id="autoMaxLimitValue" onChange={setInputValue} value={data.autoMaxLimitValue}
@@ -99,6 +111,12 @@ const Monitoring = ({selected}) => {
                                type="text" disabled={!data.autoMaxLimit || process.funcAddress || process.onLoading}/>
                         <div> RUB</div>
                     </div>
+                    <CheckboxWithQuestion text={"Автоматически запускать \"Мониторинг цен\""}
+                                          description={"\"Мониторинг цен\" будет автоматически обновлять выставленные предметы и включаться раз в 6 часов. Доступна при включенных функциях автоматической подстановки мин. и макс. порогов."}
+                                          id="autoMonitoringStart"
+                                          onChange={setCheckboxValue}
+                                          disabled={process.funcAddress || process.onLoading || !data.autoMinLimit || !data.autoMaxLimit}
+                                          checked={data.autoMonitoringStart}/>
                 </div>
             </div>
         </div>

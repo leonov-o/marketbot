@@ -41,7 +41,8 @@ const defaultState = {
             autobuy: {
                 browser: null,
                 funcAddress: null,
-                logs: []
+                logs: [],
+                purchasedItems: []
             }
         }
     }))
@@ -84,6 +85,8 @@ const SET_ITEMS = "SET_ITEMS";
 const AUTOBUY_BROWSER_START = "AUTOBUY_BROWSER_START";
 const START_AUTOBUY = "START_AUTOBUY";
 const STOP_AUTOBUY = "STOP_AUTOBUY";
+const ADD_PURCHASED_ITEMS = "ADD_PURCHASED_ITEMS";
+const REMOVE_PURCHASED_ITEMS = "REMOVE_PURCHASED_ITEMS";
 export const mainReducer = (state = defaultState, action) => {
     switch (action.type) {
         case CHANGE_FIELD_VALUE: {
@@ -116,6 +119,9 @@ export const mainReducer = (state = defaultState, action) => {
                     },
                     "autobuy": {
                         "fields": {
+                            "autoAutobuyStart": false,
+                            "autoAutobuyStartValue": "500",
+                            "autoSell": false,
                             "dynamicPercent": false,
                             "knife": false,
                             "stattrak": true,
@@ -168,7 +174,8 @@ export const mainReducer = (state = defaultState, action) => {
                     autobuy: {
                         browser: null,
                         funcAddress: null,
-                        logs: []
+                        logs: [],
+                        purchasedItems: []
                     }
                 }
             });
@@ -193,11 +200,15 @@ export const mainReducer = (state = defaultState, action) => {
         }
         case ON_LOGS_ADD: {
             const newState = {...state};
+            if (newState.process[action.payload.i].logs.length >= 700)
+                newState.process[action.payload.i].logs = [];
             newState.process[action.payload.i].logs.push(`${new Date().toLocaleTimeString()} ${action.payload.log}`);
             return newState;
         }
         case ON_LOGS_AUTOBUY_ADD: {
             const newState = {...state};
+            if (newState.process[action.payload.i].func.autobuy.logs.length >= 700)
+                newState.process[action.payload.i].func.autobuy.logs = [];
             newState.process[action.payload.i].func.autobuy.logs.push(`${new Date().toLocaleTimeString()} ${action.payload.log}`);
             return newState;
         }
@@ -394,6 +405,21 @@ export const mainReducer = (state = defaultState, action) => {
             newState.process[action.payload.i].func.autobuy.logs.push(`${new Date().toLocaleTimeString()} Стоп`);
             return newState;
         }
+        case ADD_PURCHASED_ITEMS: {
+            const newState = {...state};
+            newState.process[action.payload.i].func.autobuy.purchasedItems.push(action.payload.item);
+            return newState;
+        }
+        case REMOVE_PURCHASED_ITEMS: {
+            const newState = {...state};
+            const {market_hash_name, instanceid} = action.payload;
+            const searchedIndex = newState.process[action.payload.i].func.autobuy.purchasedItems.findIndex((elem) => elem.market_hash_name === market_hash_name && elem.real_instance === instanceid);
+            if (searchedIndex >= 0) {
+                newState.process[action.payload.i].func.autobuy.purchasedItems.splice(searchedIndex, 1);
+            }
+
+            return newState;
+        }
         default:
             return state;
     }
@@ -433,6 +459,11 @@ export const onAuthAction = (flag) => ({type: ON_AUTH, payload: {flag}});
 export const autobuyBrowserStartAction = (i, browser) => ({type: AUTOBUY_BROWSER_START, payload: {i, browser}});
 export const startAutobuyAction = (i, funcAddress) => ({type: START_AUTOBUY, payload: {i, funcAddress}});
 export const stopAutobuyAction = (i) => ({type: STOP_AUTOBUY, payload: {i}});
+export const addPurchasedItemsAction = (i, item) => ({type: ADD_PURCHASED_ITEMS, payload: {i, item}});
+export const removePurchasedItemAction = (i, instanceid, market_hash_name) => ({
+    type: REMOVE_PURCHASED_ITEMS,
+    payload: {i, instanceid, market_hash_name}
+});
 
 
 export const initAccountAction = (payload) => ({type: INIT_ACCOUNT, payload});
@@ -469,6 +500,10 @@ export const accountsInitThunkCreator = () => {
                         dispatch(getMarketBuyHistoryThunkCreator(i));
                         dispatch(startSteamTradeAcceptWhenItemSoldTimerThunkCreator(i));
                         dispatch(startSteamTradeAcceptTimerThunkCreator(i));
+                        dispatch(autoSellPurchasedItemsThunkCreator(i));
+                        dispatch(autoMonitoringStartTimerThunkCreator(i));
+                        dispatch(autoSetItemsStartTimerThunkCreator(i));
+                        dispatch(autoAutobuyStartTimerThunkCreator(i));
                         dispatch(onErrorAction(i, null));
                         dispatch(onLoadingAction(i, false));
                     } catch (e) {
@@ -491,13 +526,13 @@ export const startMarketPingPongTimerThunkCreator = (i) => {
     return async (dispatch, getState) => {
         const logging = (log) => dispatch(onLogsAddAction(i, log));
         let timerId = setTimeout(async function tick() {
-            try{
+            try {
                 const online = await user.marketPingPong(getState().accounts[i].authData.marketApi);
                 if (online)
                     logging("Поддержание онлайна: да")
                 else
                     logging("Поддержание онлайна: нет")
-            }catch (e) {
+            } catch (e) {
                 console.log(`startMarketPingPongTimeThunkCreator error: ${e}`)
             }
             timerId = setTimeout(tick, 180000);
@@ -517,6 +552,112 @@ export const marketUpdateInventoryTimerThunkCreator = (i) => {
         }, 2500);
     }
 }
+
+export const autoMonitoringStartTimerThunkCreator = (i) => {
+    return async (dispatch, getState) => {
+        let timerId = setTimeout(async function tick() {
+            if (getState().accounts[i].funcSaves.monitoring.fields.autoMonitoringStart) {
+                try {
+                    dispatch(stopMonitoringAction(i));
+                    do {
+                        dispatch(getMonitoringItemsThunkCreator(i))
+                        console.log(getState().accounts[i].authData.login + " Автоматический старт загрузки предметов Мониторинга");
+                        await user.sleep(2000);
+                        while (getState().process[i].func.monitoring.onLoading) {
+                            console.log(getState().accounts[i].authData.login + " Еще грузит");
+                            await user.sleep(3000);
+                        }
+                    } while (getState().process[i].func.monitoring.items[0] && getState().process[i].func.monitoring.items[0].error)
+
+                    if (getState().process[i].func.monitoring.items.length) {
+                        console.log(getState().accounts[i].authData.login + " Старт мониторинга")
+
+                        dispatch(startMonitoringTimerThunkCreator(i));
+                    } else {
+                        console.log(getState().accounts[i].authData.login + " Предметов нет")
+                    }
+                } catch (e) {
+                    console.log(`autoMonitoringStartTimerThunkCreator error: ${e}`)
+                }
+            }
+            timerId = setTimeout(tick, 21600000);
+        }, 50000);
+    }
+}
+
+export const autoSetItemsStartTimerThunkCreator = (i) => {
+    return async (dispatch, getState) => {
+        let timerId = setTimeout(async function tick() {
+            if (getState().accounts[i].funcSaves.setItems.fields.autoSetItemsStart) {
+                try {
+                    do {
+                        dispatch(getSetItemsThunkCreator(i));
+                        console.log(getState().accounts[i].authData.login + " Автоматический старт загрузки предметов для Выставления");
+                        await user.sleep(2000);
+                        while (getState().process[i].func.setItems.onLoading) {
+                            console.log(getState().accounts[i].authData.login + " Еще грузит");
+                            await user.sleep(3000);
+                        }
+                    } while (getState().process[i].func.setItems.items[0] && getState().process[i].func.setItems.items[0].error)
+
+                    if (getState().process[i].func.setItems.items.length) {
+                        console.log(getState().accounts[i].authData.login + " Старт выставления")
+                        dispatch(setItemsThunkCreator(i));
+                    } else {
+                        console.log(getState().accounts[i].authData.login + " Предметов нет")
+                    }
+                } catch (e) {
+                    console.log(`autoSetItemsStartTimerThunkCreator error: ${e}`)
+                }
+            }
+            timerId = setTimeout(tick, 21600000);
+        }, 10000);
+    }
+}
+
+export const autoAutobuyStartTimerThunkCreator = (i) => {
+    return async (dispatch, getState) => {
+        let timerId = setTimeout(async function tick() {
+            if (getState().accounts[i].funcSaves.autobuy.fields.autoAutobuyStart) {
+                try {
+                    const startLimit = getState().accounts[i].funcSaves.autobuy.fields.autoAutobuyStartValue;
+                    dispatch(stopAutobuyAction(i));
+                    await user.sleep(3000);
+                    const balance = await user.getMarketBalance(getState().accounts[i].authData.marketApi)
+                    if(balance && balance >= Number(startLimit)){
+                        dispatch(startAutobuyTimerThunkCreator(i));
+                    }
+                } catch (e) {
+                    console.log(`autoAutobuyStartTimerThunkCreator error: ${e}`)
+                }
+            }
+            timerId = setTimeout(tick, 21600000);
+        }, 30000);
+    }
+}
+
+export const autoSellPurchasedItemsThunkCreator = (i) => {
+    return async (dispatch, getState) => {
+        const logging = (log) => dispatch(onLogsAddAction(i, log));
+        const removeItem = (instanceid, market_hash_name) => dispatch(removePurchasedItemAction(i, instanceid, market_hash_name));
+        let timerId = setTimeout(async function tick() {
+            try {
+                const isAutoSold = getState().accounts[i].funcSaves.autobuy.fields.autoSell;
+                if (isAutoSold) {
+                    const {community, steam_id, cookies, session_id} = getState().process[i];
+                    const purchasedItems = getState().process[i].func.autobuy.purchasedItems;
+                    if (purchasedItems && purchasedItems.length) {
+                        await user.autoSellPurchasedItems(community, steam_id, cookies, session_id, purchasedItems, logging, removeItem);
+                    }
+                }
+            } catch (e) {
+                console.log(`autoSellPurchasedItemsThunkCreator error: ${e}`)
+            }
+            timerId = setTimeout(tick, 1800000);
+        }, 300000);
+    }
+}
+
 export const getMarketBalanceThunkCreator = (i) => {
     return async (dispatch, getState) => {
         try {
@@ -623,10 +764,10 @@ export const startSteamTradeAcceptWhenItemSoldTimerThunkCreator = (i) => {
         const logging = (log) => dispatch(onLogsAddAction(i, log));
 
         let timerId = setTimeout(async function tick() {
-            try{
-                if(community)
+            try {
+                if (community)
                     await user.steamTradeAcceptWhenItemSold(marketApi, community, identity_secret, logging);
-            }catch (e) {
+            } catch (e) {
                 console.log(`startSteamTradeAcceptWhenItemSoldTimerThunkCreator ${e.message}`);
             }
             timerId = setTimeout(tick, 60000); // (*)
@@ -640,10 +781,10 @@ export const startSteamTradeAcceptTimerThunkCreator = (i) => {
         const identity_secret = getState().accounts[i].authData.identity_secret;
         const logging = (log) => dispatch(onLogsAddAction(i, log));
         let timerId = setTimeout(async function tick() {
-            try{
-                if(community)
+            try {
+                if (community)
                     await user.steamTradeAccept(community, identity_secret, logging);
-            }catch (e) {
+            } catch (e) {
                 console.log(`startSteamTradeAcceptTimerThunkCreator ${e.message}`);
             }
             timerId = setTimeout(tick, 600000); // (*)
@@ -675,13 +816,13 @@ export const startMonitoringTimerThunkCreator = (i) => {
             dispatch(startMonitoringAction(i, timerId));
             try {
                 const result = await user.monitoringPrices(getState().accounts[i].authData.marketApi, getState().process[i].func.monitoring.items, logging);
-                if(result === "NO_ITEMS"){
+                if (result === "NO_ITEMS") {
                     dispatch(stopMonitoringAction(i));
                 }
             } catch (e) {
                 console.log(`startMonitoringTimerThunkCreator ${e.message}`);
             }
-            if (getState().process[i].func.monitoring.funcAddress){
+            if (getState().process[i].func.monitoring.funcAddress) {
                 timerId = setTimeout(tick, 15000);
                 dispatch(startMonitoringAction(i, timerId));
             }
@@ -723,20 +864,34 @@ export const startAutobuyTimerThunkCreator = (i) => {
     return async (dispatch, getState) => {
         const logging = (log) => dispatch(onLogsAddAction(i, log));
         const loggingAutobuy = (log) => dispatch(onLogsAutobuyAddAction(i, log));
+        const addPurchaseItem = (item) => dispatch(addPurchasedItemsAction(i, item));
+        const isAutoSold = getState().accounts[i].funcSaves.autobuy.fields.autoSell;
+
         logging('Запуск "Autobuy"');
         try {
             const {browser, page} = await user.autobuyBrowserStart();
             dispatch(autobuyBrowserStartAction(i, browser));
             await user.autobuyAuth(getState().accounts[i].authData, page, loggingAutobuy);
+            if(getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTable){
+                const minPercent = await user.maxPercentInTableForAutobuy(getState().accounts[i].funcSaves.autobuy.fields, page);
+                dispatch(changeFieldValueAction({
+                    field: "minPercent",
+                    selected: i,
+                    type: "autobuy",
+                    value: minPercent
+                }))
+                await user.sleep(2000);
+            }
+
             let timerId = setTimeout(async function tick() {
                 dispatch(startAutobuyAction(i, timerId));
                 try {
-                    await user.autobuy(getState().accounts[i].authData.marketApi, getState().accounts[i].funcSaves.autobuy.fields, page, loggingAutobuy);
+                    await user.autobuy(getState().accounts[i].authData.marketApi, getState().accounts[i].funcSaves.autobuy.fields, page, loggingAutobuy, isAutoSold, addPurchaseItem);
 
                 } catch (e) {
                     console.log(`startAutobuyTimerThunkCreator ${e.message}`);
                 }
-                if (getState().process[i].func.autobuy.browser){
+                if (getState().process[i].func.autobuy.browser) {
                     timerId = setTimeout(tick, 5000);
                     dispatch(startAutobuyAction(i, timerId));
                 }

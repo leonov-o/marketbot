@@ -829,27 +829,31 @@ class User {
         const inventoryJson = await this._getInventory(inventoryUrl, session_id);
         let logText = "Проданы предметы:\n";
         for (let item of filteredPurchaseItems) {
-            const inventoryItem = inventoryJson.descriptions.find((elem) => elem.market_hash_name === item.market_hash_name && elem.instanceid === item.real_instance);
-            if (inventoryItem) {
-                const itemLowestPrice = await this._getPriceSteam(session_id, item.market_hash_name);
-                if (itemLowestPrice) {
-                    const sellPrice = Number((itemLowestPrice - 0.05).toFixed(2));
-                    const {classid} = inventoryItem;
-                    const assetItems = inventoryJson.assets.filter((elem) => elem.classid === classid && elem.instanceid === item.real_instance);
-                    if (assetItems && assetItems.length) {
-                        for (let i = 0; i < item.amount, i < assetItems.length; i++) {
-                            const {assetid} = assetItems[i];
-                            const result = await this.itemSaleSteam(community, steam_id, cookies, session_id, assetid, sellPrice);
-                            console.log(result)
-                            if (result.success) {
-                                console.log(`SOlD ${item.market_hash_name} ${assetid} Price: ${itemLowestPrice} SoldPrice: ${sellPrice}`);
-                                removeItem(item.real_instance, item.market_hash_name);
-                                logText += `${item.market_hash_name} Цена: ${sellPrice}\n`;
+            try{
+                const inventoryItem = inventoryJson.descriptions.find((elem) => elem.market_hash_name === item.market_hash_name && elem.instanceid === item.real_instance);
+                if (inventoryItem) {
+                    const itemLowestPrice = await this._getPriceSteam(session_id, item.market_hash_name);
+                    if (itemLowestPrice) {
+                        const sellPrice = Number((itemLowestPrice - 0.05).toFixed(2));
+                        const {classid} = inventoryItem;
+                        const assetItems = inventoryJson.assets.filter((elem) => elem.classid === classid && elem.instanceid === item.real_instance);
+                        if (assetItems && assetItems.length) {
+                            for (let i = 0; i < item.amount, i < assetItems.length; i++) {
+                                const {assetid} = assetItems[i];
+                                const result = await this.itemSaleSteam(community, steam_id, cookies, session_id, assetid, sellPrice);
+                                console.log(result)
+                                if (result.success) {
+                                    console.log(`SOlD ${item.market_hash_name} ${assetid} Price: ${itemLowestPrice} SoldPrice: ${sellPrice}`);
+                                    removeItem(item.real_instance, item.market_hash_name);
+                                    logText += `${item.market_hash_name} Цена: ${sellPrice}\n`;
+                                }
+                                await this.sleep(3000);
                             }
-                            await this.sleep(3000);
                         }
                     }
                 }
+            }catch (e) {
+                console.log(`autoSellPurchasedItems error ${e}`)
             }
         }
         logging(logText);

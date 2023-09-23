@@ -610,7 +610,7 @@ export const autoSetItemsStartTimerThunkCreator = (i) => {
                     console.log(`autoSetItemsStartTimerThunkCreator error: ${e}`)
                 }
             }
-            timerId = setTimeout(tick, 21600000);
+            timerId = setTimeout(tick, 10800000);
         }, 10000);
     }
 }
@@ -631,7 +631,7 @@ export const autoAutobuyStartTimerThunkCreator = (i) => {
                     console.log(`autoAutobuyStartTimerThunkCreator error: ${e}`)
                 }
             }
-            timerId = setTimeout(tick, 21600000);
+            timerId = setTimeout(tick, 7200000);
         }, 30000);
     }
 }
@@ -675,7 +675,7 @@ export const getSteamBalanceThunkCreator = (i) => {
     return async (dispatch, getState) => {
         try {
             dispatch(getSteamBalanceAction(i, -1));
-            const sum = await user.getSteamBalance(getState().process[i].session_id);
+            const sum = await user.getSteamBalance(getState().process[i].session_id, getState().process[i].steam_id);
             dispatch(getSteamBalanceAction(i, sum));
             dispatch(sumAllBalanceAction(i));
         } catch (e) {
@@ -874,6 +874,12 @@ export const startAutobuyTimerThunkCreator = (i) => {
             await user.autobuyAuth(getState().accounts[i].authData, page, loggingAutobuy);
             if(getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTable){
                 const minPercent = await user.maxPercentInTableForAutobuy(getState().accounts[i].funcSaves.autobuy.fields, page);
+                loggingAutobuy(`Мин. %: ${minPercent}`);
+                if(Number(minPercent) < Number(getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTableValue)){
+                    dispatch(stopAutobuyAction(i));
+                    loggingAutobuy(`Мин. % ниже ограничения.`);
+                    return
+                }
                 dispatch(changeFieldValueAction({
                     field: "minPercent",
                     selected: i,

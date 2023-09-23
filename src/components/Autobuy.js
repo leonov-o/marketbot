@@ -31,12 +31,12 @@ const Autobuy = ({selected}) => {
             id: "autoSell",
             checked: data.autoSell,
         },
-        {
-            text: "Aвтоматическая подстановка поля \"Мин. %\" максимальным значением в таблице",
-            description: "Выбирает процент самого верхнего предмета в таблице и подставляет в поле \"Мин. %\".",
-            id: "autoSetMaxPercentFromTable",
-            checked: data.autoSetMaxPercentFromTable,
-        }
+        // {
+        //     text: "Aвтоматическая подстановка поля \"Мин. %\" максимальным значением в таблице",
+        //     description: "Выбирает процент самого верхнего предмета в таблице и подставляет в поле \"Мин. %\".",
+        //     id: "autoSetMaxPercentFromTable",
+        //     checked: data.autoSetMaxPercentFromTable,
+        // }
     ];
 
     const checkbox = [
@@ -163,8 +163,22 @@ const Autobuy = ({selected}) => {
                                               checked={item.checked}/>
                     ))}
 
+                    <CheckboxWithQuestion text={"Aвтоматическая подстановка поля \"Мин. %\" максимальным значением в таблице"}
+                                          description={"Выбирает процент самого верхнего предмета в таблице и подставляет в поле \"Мин. %\"."}
+                                          id="autoSetMaxPercentFromTable"
+                                          onChange={setCheckboxValue}
+                                          disabled={process.browser}
+                                          checked={data.autoSetMaxPercentFromTable}/>
+                    <div className="mt-2 flex justify-end space-x-4">
+                        <div className={"text-sm"}>не ниже</div>
+                        <input id="autoSetMaxPercentFromTableValue" onChange={setFieldValue} value={data.autoSetMaxPercentFromTableValue}
+                               className="w-16 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                               type="text" disabled={process.browser || !data.autoSetMaxPercentFromTable}/>
+                        <div className={"text-sm"}> %</div>
+                    </div>
+
                     <CheckboxWithQuestion text={"Автоматически запускать \"Autobuy\" при балансе"}
-                                          description={"\"Autobuy\" будет автоматически включаться по выставленным параметрам раз в 6 часов. Важно, чтобы поле \"Мин. %\" было заполнено, либо воспользуйтесь функцией автоматической подстановки поля \"Мин. %\" максимальным значением в таблице."}
+                                          description={"\"Autobuy\" будет автоматически включаться по выставленным параметрам раз в 2 часа. Важно, чтобы поле \"Мин. %\" было заполнено, либо воспользуйтесь функцией автоматической подстановки поля \"Мин. %\" максимальным значением в таблице."}
                                           id="autoAutobuyStart"
                                           onChange={setCheckboxValue}
                                           disabled={process.browser}

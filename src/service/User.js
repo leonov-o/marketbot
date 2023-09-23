@@ -183,14 +183,14 @@ class User {
     }
 
     // Steam Wallet Balance
-    async getSteamBalance(session_id) {
-        const url = 'https://store.steampowered.com/account/';
+    async getSteamBalance(session_id, steam_id) {
+        const url = 'https://steamcommunity.com/profiles/' + steam_id;
         let headers = {
             Cookie: session_id.join(";"),
-            'Referer': 'https://steamcommunity.com/',
-            'Host': 'store.steampowered.com',
+            'Referer': 'https://store.steampowered.com/',
+            'Host': 'steamcommunity.com',
         }
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 3; i++) {
             const res = await fetch(url, {
                 headers: {
                     ...this.defaultHeaders,
@@ -203,9 +203,9 @@ class User {
                 continue;
             }
             const $ = cheerio.load(await res.text());
-            const balance = $(".accountData.price a").text().replace(" pуб.", " ").replace(",", ".");
+            const balance = $("#header_wallet_balance").text().replaceAll(" pуб.", " ").replaceAll(",", ".");
             if (!balance) break;
-            return Number(balance);
+            return parseFloat(balance);
         }
         throw new Error("Произошла ошибка при получении баланса steamcommunity.com");
     }
@@ -317,7 +317,7 @@ class User {
             // 'Referer': `https://steamcommunity.com/profiles/${this.steam_id}/inventory/`
         }
 
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 2; i++) {
             const res = await fetch(priceOverviewSteam, {
                 headers: {
                     ...this.defaultHeaders,
@@ -326,7 +326,7 @@ class User {
             });
             if (!res.ok) {
                 console.log(`getPriceSteam statusCode: ${res.status} statusText: ${res.statusText}`);
-                await this.sleep(10000);
+                await this.sleep(20000);
                 continue;
             }
             const json = await res.json();

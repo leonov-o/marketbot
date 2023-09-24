@@ -27,7 +27,7 @@ const Calc = ({onCalc}) => {
         <Modal onClose={() => {
             onCalc(false)
         }}>
-            <div className="px-11 py-6 w-80">
+            <div className="px-11 pb-6 w-80">
                 <div className="text-center">
                     <Header>Калькулятор выгоды</Header>
                 </div>

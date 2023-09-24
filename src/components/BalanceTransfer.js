@@ -40,7 +40,7 @@ const BalanceTransfer = ({onBalanceTransfer}) => {
         <Modal onClose={() => {
             onBalanceTransfer(false)
         }}>
-            <div className="px-9 py-6">
+            <div className="px-9 pb-6">
                 <div className="text-center">
                     <Header>Перенос баланса</Header>
                 </div>

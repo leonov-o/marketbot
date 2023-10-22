@@ -25,3 +25,4 @@ window.dataConfig = dataConfig;
 window.puppeteer = puppeteer;
 window.ipcRenderer = ipcRenderer;
 window.remote = remote;
+window.SteamCommunity = require("steamcommunity")

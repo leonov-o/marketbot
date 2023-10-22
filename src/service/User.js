@@ -1,4 +1,8 @@
 const SteamCommunity = window.require("steamcommunity");
+// const {LoginSession, EAuthTokenPlatformType} = window.require("steam-session");
+
+
+
 const SteamTotp = window.require("steam-totp");
 const cheerio = window.require("cheerio");
 const fetch = window.require("node-fetch");
@@ -50,7 +54,10 @@ class User {
             const community = new SteamCommunity();
             community.login(details, (err, cookies, sessionID) => {
                 if (!err) {
-                    steam_id = sessionID[3].split("steamLoginSecure=")[1].split("%7C%")[0];
+                    console.log(sessionID)
+                    console.log(cookies)
+                        // .split("steamLoginSecure=")[1].split("%7C%")[0];
+                    steam_id =  (sessionID.find((el) => el.startsWith("steamLoginSecure="))).split("steamLoginSecure=")[1].split("%7C%")[0];
                     session_id = sessionID;
                     resolve({
                         community,
@@ -66,6 +73,26 @@ class User {
             });
         }).then(res => res);
     }
+
+    // async authSteam({login, password, shared_secret}) {
+    //     let session = new LoginSession(EAuthTokenPlatformType.WebBrowser);
+    //     let details = {
+    //         "accountName": login,
+    //         "password": password,
+    //         "steamGuardCode": this.generateAuthCode(shared_secret)
+    //     };
+    //     const result = await session.startWithCredentials(details);
+    //     await this.sleep(3000)
+    //
+    //     console.log(result)
+    //     console.log("\n")
+    //     console.log(session.refreshToken)
+    //     console.log(session)
+    //
+    //
+    //     const cookie = await session.getWebCookies()
+    //     console.log(cookie)
+    // }
 
     async marketPingPong(marketApi) {
         const url = "https://market.csgo.com/api/PingPong/?key=" + marketApi;
@@ -425,12 +452,16 @@ class User {
                             const [, , , assetid] = match;
                             const name = json.assets["730"]["2"][assetid]["market_hash_name"];
                             let price = Number($(elem).find(".market_listing_price").text().match(/\d+,?\d*/im)[0].replace(",", "."));
-                            let pos = $(elem).find(".market_listing_listed_date_combined").text().match(/\w*:/)[0].replace(":", '');
+                            let pos = $(elem).find(".market_listing_listed_date_combined").text().match(/[А-Яа-яA-Za-z]*:/)[0].replace(":", '').replace("t", "");
+                            console.log(pos)
 
-                            if (pos === "Purchased" && !history[name]) {
+                            if ((pos === "Purchased" || pos === "Приобретено") && !history[name]) {
                                 history[name] = price;
                             }
+                            console.log(history)
                         } catch (e) {
+                            console.log("historyBuy")
+                            console.log(e)
                         }
                     }
                 );
@@ -716,11 +747,11 @@ class User {
         await page.goto(table_link);
         await page.waitForTimeout(3000);
         let skins = await page.$$('tr.tr');
-        if(skins && skins.length){
+        if (skins && skins.length) {
             const skin_percent_selector = await skins[0].$("td.tmsteama_class > div.percent");
             const skin_percent = await (await skin_percent_selector.getProperty('textContent')).jsonValue();
             return Number(skin_percent.replace("%", "")).toFixed(0);
-        }else{
+        } else {
             return "100";
         }
     }
@@ -829,7 +860,7 @@ class User {
         const inventoryJson = await this._getInventory(inventoryUrl, session_id);
         let logText = "Проданы предметы:\n";
         for (let item of filteredPurchaseItems) {
-            try{
+            try {
                 const inventoryItem = inventoryJson.descriptions.find((elem) => elem.market_hash_name === item.market_hash_name && elem.instanceid === item.real_instance);
                 if (inventoryItem) {
                     const itemLowestPrice = await this._getPriceSteam(session_id, item.market_hash_name);
@@ -852,7 +883,7 @@ class User {
                         }
                     }
                 }
-            }catch (e) {
+            } catch (e) {
                 console.log(`autoSellPurchasedItems error ${e}`)
             }
         }

@@ -508,9 +508,17 @@ export const accountsInitThunkCreator = () => {
                         dispatch(onLoadingAction(i, false));
                     } catch (e) {
                         dispatch(onErrorAction(i, e.message));
-                        if (e.message === "HTTP error 429" || e.message === "CAPTCHA" || e.message === "SteamGuardMobile" || e.message === "getaddrinfo ENOTFOUND steamcommunity.com" || e.message === "ESOCKETTIMEDOUT") {
+                        const errorList = [
+                            "HTTP error 429",
+                            "CAPTCHA",
+                            "SteamGuardMobile",
+                            "getaddrinfo ENOTFOUND steamcommunity.com",
+                            "ESOCKETTIMEDOUT",
+                            "RateLimitExceeded"
+                        ]
+                        if (errorList.includes(e.message)) {
                             i--;
-                            await new Promise(r => setTimeout(r, 30000));
+                            await new Promise(r => setTimeout(r, 60000));
                             continue;
                         }
                     }

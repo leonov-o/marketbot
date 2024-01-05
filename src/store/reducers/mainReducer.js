@@ -31,13 +31,14 @@ import {
     START_AUTOBUY,
     START_MONITORING,
     STOP_AUTOBUY,
-    STOP_MONITORING,
+    STOP_MONITORING, SUM_ALL_ACCOUNTS_BALANCE,
     SUM_ALL_BALANCE
 } from "../constants/actionTypes";
 
 const defaultState = {
     ...window.dataConfig,
     auth: false,
+    summaryBalance: 0,
     process: window.dataConfig.accounts.map(() => ({
         loading: true,
         steam_id: null,
@@ -238,6 +239,12 @@ export const mainReducer = (state = defaultState, action) => {
             newState.process[action.payload.i].status.saleAvailability = action.payload.status.site_notmpban;
             return newState;
         }
+        case SUM_ALL_ACCOUNTS_BALANCE: {
+            return {
+                ...state,
+                summaryBalance: Number((state.process.reduce((acc, current) => current.balances.all !== -1 ? (acc + current.balances.all) : (acc + 0), 0)).toFixed(2))
+            }
+        }
         case SUM_ALL_BALANCE: {
             const newState = {...state};
             const {
@@ -330,13 +337,18 @@ export const mainReducer = (state = defaultState, action) => {
                 autoMinLimit,
                 autoMaxLimit,
                 autoMinLimitValue,
-                autoMaxLimitValue
+                autoMaxLimitValue,
+                autoMinLimitMode
             } = newState.accounts[action.payload.i].funcSaves.monitoring.fields;
             if (autoMinLimit) {
                 for (let item of action.payload.items) {
                     const historyPrice = newState.process[action.payload.i].marketBuyHistory[item.name]
                     if (autoMinLimitValue !== "" && historyPrice)
-                        item.minLimit = Math.floor(historyPrice - Number(autoMinLimitValue));
+                        if (!autoMinLimitMode || (autoMinLimitMode === "number")) {
+                            item.minLimit = Math.floor(historyPrice - Number(autoMinLimitValue));
+                        } else if (autoMinLimitMode === "percent") {
+                            item.minLimit = Math.floor(historyPrice - (Number(autoMinLimitValue) * historyPrice / 100));
+                        }
                 }
             }
             if (autoMaxLimit) {

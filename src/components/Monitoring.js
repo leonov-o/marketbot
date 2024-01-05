@@ -93,12 +93,19 @@ const Monitoring = ({selected}) => {
                                           onChange={setCheckboxValue}
                                           disabled={process.funcAddress || process.onLoading}
                                           checked={data.autoMinLimit}/>
-                    <div className="mt-2 flex justify-start space-x-2">
+                    <div className="mt-2 flex justify-start items-center space-x-2">
                         <div>-</div>
-                        <input id="autoMinLimitValue" onChange={setInputValue} value={data.autoMinLimitValue}
+                        <input id="autoMinLimitValue"  onChange={setInputValue} value={data.autoMinLimitValue}
                                className="w-12 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
-                               type="text" disabled={!data.autoMinLimit || process.funcAddress || process.onLoading}/>
-                        <div> RUB</div>
+                               type="number" disabled={!data.autoMinLimit || process.funcAddress || process.onLoading}/>
+                        <div className="">
+                            <fieldset className="space-x-2" id="group">
+                                <input type="radio" checked={(data.autoMinLimitMode === "number") || (!data.autoMinLimitMode)} onChange={setInputValue} value="number" id="autoMinLimitMode" name="group"/>
+                                <label htmlFor="number">RUB</label>
+                                <input type="radio" checked={data.autoMinLimitMode === "percent"} onChange={setInputValue} value="percent"  id="autoMinLimitMode" name="group"/>
+                                <label htmlFor="percent">%</label>
+                            </fieldset>
+                        </div>
                     </div>
                     <CheckboxWithQuestion text="Автоматически подставлять макс. порог"
                                           description={"Подставляет максимальный порог на N руб. выше цены покупки"}
@@ -106,11 +113,11 @@ const Monitoring = ({selected}) => {
                                           onChange={setCheckboxValue}
                                           disabled={process.funcAddress || process.onLoading}
                                           checked={data.autoMaxLimit}/>
-                    <div className="mt-2 flex justify-start space-x-2">
+                    <div className="mt-2 flex justify-start items-center space-x-2">
                         <div>+</div>
                         <input id="autoMaxLimitValue" onChange={setInputValue} value={data.autoMaxLimitValue}
                                className="w-12 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
-                               type="text" disabled={!data.autoMaxLimit || process.funcAddress || process.onLoading}/>
+                               type="number" disabled={!data.autoMaxLimit || process.funcAddress || process.onLoading}/>
                         <div> RUB</div>
                     </div>
                     <CheckboxWithQuestion text={"Автоматически запускать \"Мониторинг цен\""}

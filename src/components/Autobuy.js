@@ -173,7 +173,7 @@ const Autobuy = ({selected}) => {
                         <div className={"text-sm"}>не ниже</div>
                         <input id="autoSetMaxPercentFromTableValue" onChange={setFieldValue} value={data.autoSetMaxPercentFromTableValue}
                                className="w-16 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
-                               type="text" disabled={process.browser || !data.autoSetMaxPercentFromTable}/>
+                               type="number" disabled={process.browser || !data.autoSetMaxPercentFromTable}/>
                         <div className={"text-sm"}> %</div>
                     </div>
 
@@ -187,7 +187,7 @@ const Autobuy = ({selected}) => {
                         <div className={"text-sm"}>от</div>
                         <input id="autoAutobuyStartValue" onChange={setFieldValue} value={data.autoAutobuyStartValue}
                                className="w-16 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
-                               type="text" disabled={process.browser || !data.autoAutobuyStart}/>
+                               type="number" disabled={process.browser || !data.autoAutobuyStart}/>
                         <div className={"text-sm"}> RUB</div>
                     </div>
 
@@ -201,7 +201,7 @@ const Autobuy = ({selected}) => {
                     <div className="flex flex-wrap justify-between mt-4">
                         {inputs.map((item, i) => (
                             <Input key={i} id={item.id} text={item.text} inputStyle={item.inputStyle}
-                                   onChange={setFieldValue} value={item.value} disabled={process.browser}/>
+                                   onChange={setFieldValue} value={item.value} type="number" disabled={process.browser}/>
                         ))}
                     </div>
                 </div>

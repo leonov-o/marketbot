@@ -32,7 +32,7 @@ import {
     START_AUTOBUY,
     START_MONITORING,
     STOP_AUTOBUY,
-    STOP_MONITORING,
+    STOP_MONITORING, SUM_ALL_ACCOUNTS_BALANCE,
     SUM_ALL_BALANCE
 } from "../constants/actionTypes";
 
@@ -80,6 +80,8 @@ export const removePurchasedItemAction = (i, instanceid, market_hash_name) => ({
 export const initAccountAction = (payload) => ({type: INIT_ACCOUNT, payload});
 export const getMarketStatusAction = (i, status) => ({type: GET_MARKET_STATUS, payload: {i, status}});
 export const sumAllBalanceAction = (i) => ({type: SUM_ALL_BALANCE, payload: {i}});
+export const sumAllAccountsBalanceAction = () => ({type: SUM_ALL_ACCOUNTS_BALANCE});
+
 export const getMarketBalanceAction = (i, sum) => ({type: GET_MARKET_BALANCE, payload: {i, sum}});
 export const getSteamBalanceAction = (i, sum) => ({type: GET_STEAM_BALANCE, payload: {i, sum}});
 export const getInventoryCostAction = (i, data) => ({type: GET_INVENTORY_COST, payload: {i, data}});
@@ -284,6 +286,7 @@ export const getMarketBalanceThunkCreator = (i) => {
             const sum = await user.getMarketBalance(getState().accounts[i].authData.marketApi);
             dispatch(getMarketBalanceAction(i, sum));
             dispatch(sumAllBalanceAction(i));
+            dispatch(sumAllAccountsBalanceAction());
         } catch (e) {
             console.log(`getMarketBalanceThunkCreator error: ${e}`)
         }
@@ -297,6 +300,7 @@ export const getSteamBalanceThunkCreator = (i) => {
             const sum = await user.getSteamBalance(getState().process[i].session_id, getState().process[i].steam_id);
             dispatch(getSteamBalanceAction(i, sum));
             dispatch(sumAllBalanceAction(i));
+            dispatch(sumAllAccountsBalanceAction());
         } catch (e) {
             console.log(`getSteamBalanceThunkCreator error: ${e}`)
         }
@@ -310,6 +314,7 @@ export const getInventoryCostThunkCreator = (i) => {
             const data = await user.getInventoryCost(getState().process[i].steam_id, getState().process[i].session_id);
             dispatch(getInventoryCostAction(i, data));
             dispatch(sumAllBalanceAction(i));
+            dispatch(sumAllAccountsBalanceAction());
         } catch (e) {
             console.log(`getInventoryCostThunkCreator error: ${e}`)
         }
@@ -323,6 +328,7 @@ export const getSteamMarketLotsThunkCreator = (i) => {
             const sum = await user.getSteamMarketLots(getState().process[i].session_id);
             dispatch(getSteamMarketLotsAction(i, sum));
             dispatch(sumAllBalanceAction(i));
+            dispatch(sumAllAccountsBalanceAction());
         } catch (e) {
             console.log(`getSteamMarketLotsThunkCreator error: ${e}`)
         }

@@ -11,7 +11,7 @@ import {
     accountsInitThunkCreator, getInventoryCostThunkCreator,
     getMarketBalanceThunkCreator,
     getSteamBalanceThunkCreator, getSteamMarketLotsThunkCreator
-} from "../store/mainReducer";
+} from "../store/actions/actionCreators";
 import ErrorCircle from "./shared/ErrorCircle";
 import Spinner from "./shared/Spinner";
 

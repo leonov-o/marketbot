@@ -8,7 +8,7 @@ import {
     changeSetItemFieldsAction,
     getMarketBuyHistoryThunkCreator,
     getSetItemsThunkCreator, setItemsThunkCreator
-} from "../store/mainReducer";
+} from "../store/actions/actionCreators";
 import Spinner from "./shared/Spinner";
 
 const SetItems = ({selected}) => {

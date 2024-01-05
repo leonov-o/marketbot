@@ -10,7 +10,7 @@ import {
     getSteamBalanceThunkCreator,
     getInventoryCostThunkCreator,
     getSteamMarketLotsThunkCreator, getMarketStatusThunkCreator
-} from "../store/mainReducer";
+} from "../store/actions/actionCreators";
 import refreshIcon from "../resources/icons/refresh_b.png";
 
 const AccountCard = ({selected}) => {

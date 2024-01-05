@@ -3,7 +3,7 @@ import Button from "./shared/Button";
 import Input from "./shared/Input";
 import Header from "./shared/Header";
 import {useDispatch, useSelector} from "react-redux";
-import {changeFieldValueAction, startAutobuyTimerThunkCreator, stopAutobuyAction} from "../store/mainReducer";
+import {changeFieldValueAction, startAutobuyTimerThunkCreator, stopAutobuyAction} from "../store/actions/actionCreators";
 import Checkbox from "./shared/Checkbox";
 import CheckboxWithQuestion from "./shared/CheckboxWithQuestion";
 

@@ -11,7 +11,7 @@ import {
     changeUsedStateAction,
     deleteAccountAction,
     editAccountAction
-} from "../store/mainReducer";
+} from "../store/actions/actionCreators";
 
 
 const Settings = () => {

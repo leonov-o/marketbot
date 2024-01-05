@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from "react-redux";
-import {changeMonitoringItemFieldsAction} from "../../store/mainReducer";
+import {changeMonitoringItemFieldsAction} from "../../store/actions/actionCreators";
 
 const MonitoringItems = ({item, selected, index, disabled}) => {
     const dispatch = useDispatch();

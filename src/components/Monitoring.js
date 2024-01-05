@@ -3,11 +3,13 @@ import Header from "./shared/Header";
 import {useDispatch, useSelector} from "react-redux";
 import {
     changeFieldValueAction,
+    getMonitoringItemsThunkCreator,
     pasteMonitoringItemsValueAction,
-    saveMonitoringItemsValueAction, startMonitoringTimerThunkCreator
-} from "../store/mainReducer";
+    saveMonitoringItemsValueAction,
+    startMonitoringTimerThunkCreator,
+    stopMonitoringAction
+} from "../store/actions/actionCreators";
 import CheckboxWithQuestion from "./shared/CheckboxWithQuestion";
-import {getMonitoringItemsThunkCreator, stopMonitoringAction} from "../store/mainReducer";
 import MonitoringItems from "./shared/MonitoringItems";
 import Spinner from "./shared/Spinner";
 

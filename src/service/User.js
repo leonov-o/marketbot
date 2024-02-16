@@ -453,15 +453,13 @@ class User {
                             const name = json.assets["730"]["2"][assetid]["market_hash_name"];
                             let price = Number($(elem).find(".market_listing_price").text().match(/\d+,?\d*/im)[0].replace(",", "."));
                             let pos = $(elem).find(".market_listing_listed_date_combined").text().match(/[А-Яа-яA-Za-z]*:/)[0].replace(":", '').replace("t", "");
-                            console.log(pos)
 
                             if ((pos === "Purchased" || pos === "Приобретено") && !history[name]) {
                                 history[name] = price;
                             }
-                            console.log(history)
                         } catch (e) {
-                            console.log("historyBuy")
-                            console.log(e)
+                            // console.log("historyBuy")
+                            // console.log(e)
                         }
                     }
                 );
@@ -678,7 +676,7 @@ class User {
         let executablePath = puppeteer.executablePath().replace("app.asar", "app.asar.unpacked") //для публикации
         let browser = await puppeteer.launch({
             executablePath: executablePath,
-            headless: true,
+            headless: false,
             args: ['--start-fullscreen', '--disable-web-security']
         });
         let page = await browser.newPage();
@@ -706,16 +704,16 @@ class User {
         const {login, password, shared_secret} = authData;
         loggingAutobuy("Авторизация Steam...");
         await page.goto('https://steamcommunity.com/login/home'); //переходим по ссылке для авторизации
-        await page.waitForSelector(".newlogindialog_LoginForm_3Tsg9"); //ждем пока загрузится форма для вписывания логина/пароля
+        await page.waitForSelector("._3Tsg92fl5YHs5NNgpidiWj"); //ждем пока загрузится форма для вписывания логина/пароля
         await page.waitFor(1000); //просто ждем 1 секунду
-        await page.click('.newlogindialog_TextField_2KXGK:first-child input'); //кликаем на поле, куда нужно вписывать логин
-        await page.type(".newlogindialog_TextField_2KXGK:first-child input", login); //вписываем сам логин
-        await page.click('.newlogindialog_TextField_2KXGK:nth-child(2) input'); //кликаем на поле, куда нужно вписывать пароль
-        await page.type(".newlogindialog_TextField_2KXGK:nth-child(2) input", password); //вписываем сам пароль
+        await page.click('._2KXGKToxF6BG65rXNZ-mJX:first-child input'); //кликаем на поле, куда нужно вписывать логин
+        await page.type("._2KXGKToxF6BG65rXNZ-mJX:first-child input", login); //вписываем сам логин
+        await page.click('._2KXGKToxF6BG65rXNZ-mJX:nth-child(2) input'); //кликаем на поле, куда нужно вписывать пароль
+        await page.type("._2KXGKToxF6BG65rXNZ-mJX:nth-child(2) input", password); //вписываем сам пароль
         await page.waitForTimeout(1000); //ждем 1 секунду
-        await page.click('.newlogindialog_SignInButtonContainer_14fsn .newlogindialog_SubmitButton_2QgFE'); //кликаем на кнопку "войти"
-        await page.waitForSelector(".segmentedinputs_SegmentedCharacterInput_3PDBF"); //ждем пока прогрузится окно для ввода гуард кода
-        await page.focus(".segmentedinputs_SegmentedCharacterInput_3PDBF > input:nth-child(1)");
+        await page.click('._2QgFEj17t677s3x299PNJQ'); //кликаем на кнопку "войти"
+        await page.waitForSelector("._3PDBFJ_verUpV38hX7qRqL"); //ждем пока прогрузится окно для ввода гуард кода
+        await page.focus("._3PDBFJ_verUpV38hX7qRqL > input:nth-child(1)");
         await page.waitForTimeout(2000); //ждем 1 секунду
         await page.keyboard.type(this.generateAuthCode(shared_secret));
         await page.waitForTimeout(6000);

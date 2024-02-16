@@ -26,8 +26,8 @@ function createWindow() {
         }
     });
     require("@electron/remote/main").enable(win.webContents);
-    win.loadURL("http://localhost:3000");//dev
-    // win.loadURL(path.join(__dirname, "index.html"));//prod
+    // win.loadURL("http://localhost:3000");//dev
+    win.loadURL(path.join(__dirname, "index.html"));//prod
 }
 
 

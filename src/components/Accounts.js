@@ -8,22 +8,23 @@ import refreshIcon from "../resources/icons/refresh_w.png"
 import Header from "./shared/Header";
 import {useDispatch, useSelector} from "react-redux";
 import {
-    accountsInitThunkCreator, getInventoryCostThunkCreator,
+    accountsInitThunkCreator, accountsReAuthThunkCreator, getInventoryCostThunkCreator,
     getMarketBalanceThunkCreator,
     getSteamBalanceThunkCreator, getSteamMarketLotsThunkCreator
 } from "../store/actions/actionCreators";
 import ErrorCircle from "./shared/ErrorCircle";
 import Spinner from "./shared/Spinner";
+import MoreButton from "./shared/MoreButton";
 
 
 const Account = ({onSelect, account, accountProc, index}) => {
     const dispatch = useDispatch();
     return (
         <div
-            className="w-44 h-48 bg-blue-600 mt-3 ml-3 rounded-2xl px-2 py-1.5 text-gray-300 space-y-1 shadow-lg">
-            <div className="flex justify-between items-center p-1">
-                <div className="w-7 h-7 rounded-3xl bg-white flex justify-center items-center  shadow-lg">
-                    <img className="w-6 h-6 rounded-3xl"
+            className="mt-3 ml-3 h-48 w-44 rounded-2xl bg-blue-600 px-2 text-gray-300 shadow-lg py-1.5 space-y-1">
+            <div className="flex items-center justify-between p-1">
+                <div className="flex h-7 w-7 items-center justify-center rounded-3xl bg-white shadow-lg">
+                    <img className="h-6 w-6 rounded-3xl"
                          src={accountProc.avatarUrl ? accountProc.avatarUrl : userAvatarSm} alt=""/>
                 </div>
                 <div className="text-sm">{account.authData.login.length > 12
@@ -32,10 +33,18 @@ const Account = ({onSelect, account, accountProc, index}) => {
                 <div className="">
                     {accountProc.error && <ErrorCircle error={accountProc.error}/>}
                 </div>
+                <div className="">
+                    <MoreButton actions={[
+                        {
+                            text: "ReAuth",
+                            onClick: () => dispatch(accountsReAuthThunkCreator(index))
+                        }
+                    ]}/>
+                </div>
             </div>
 
             {accountProc.loading
-                ? <Spinner className="w-28 h-28 mx-auto border-white"/>
+                ? <Spinner className="mx-auto h-28 w-28 border-white"/>
                 : <div>
                     <div className="relative">
                         <div
@@ -44,29 +53,29 @@ const Account = ({onSelect, account, accountProc, index}) => {
                         <div
                             className="text-xs">Market: {accountProc.balances.marketBalance > -1 ? accountProc.balances.marketBalance + " RUB" :
                             <Spinner className={"w-3 h-3 inline-block ml-1"}/>}<img
-                            onClick={() => dispatch(getMarketBalanceThunkCreator(index))} className="inline ml-1"
+                            onClick={() => dispatch(getMarketBalanceThunkCreator(index))} className="ml-1 inline"
                             src={refreshIcon} alt=""/></div>
                         <div
                             className="text-xs">Steam: {accountProc.balances.steamBalance > -1 ? accountProc.balances.steamBalance + " RUB" :
                             <Spinner className={"w-3 h-3 inline-block ml-1"}/>}<img
-                            onClick={() => dispatch(getSteamBalanceThunkCreator(index))} className="inline ml-1"
+                            onClick={() => dispatch(getSteamBalanceThunkCreator(index))} className="ml-1 inline"
                             src={refreshIcon} alt=""/></div>
                         <div
                             className="text-xs">Инвентарь: {accountProc.balances.inventoryCost > -1 ? accountProc.balances.inventoryCost + " RUB" :
                             <Spinner className={"w-3 h-3 inline-block ml-1"}/>}<img
-                            onClick={() => dispatch(getInventoryCostThunkCreator(index))} className="inline ml-1"
+                            onClick={() => dispatch(getInventoryCostThunkCreator(index))} className="ml-1 inline"
                             src={refreshIcon} alt=""/></div>
                         <div
                             className="text-xs">Лоты: {accountProc.balances.steamMarketLots > -1 ? accountProc.balances.steamMarketLots + " RUB" :
                             <Spinner className={"w-3 h-3 inline-block ml-1"}/>}<img
-                            onClick={() => dispatch(getSteamMarketLotsThunkCreator(index))} className="inline ml-1"
+                            onClick={() => dispatch(getSteamMarketLotsThunkCreator(index))} className="ml-1 inline"
                             src={refreshIcon} alt=""/></div>
                         <div
                             className="text-xs">Доступно скинов для
                             продажи: {accountProc.tradable > -1 ? accountProc.tradable :
                                 <Spinner className={"w-3 h-3 inline-block ml-1"}/>}</div>
 
-                        <div onClick={onSelect} className="w-7 h-7 absolute top-9 right-0 cursor-pointer">
+                        <div onClick={onSelect} className="absolute top-9 right-0 h-7 w-7 cursor-pointer">
                             <img src={openIcon} alt=""/>
                         </div>
                     </div>
@@ -108,12 +117,12 @@ const Accounts = ({onSelect}) => {
             return (<Account key={i} index={i} account={item} accountProc={dataProc[i]} onSelect={() => onSelect(i)}/>);
     });
     return (
-        <div className="accounts block w-3/4 px-11">
+        <div className="block w-3/4 px-11 accounts">
             <div className="text-center">
                 <Header>Аккаунты</Header>
             </div>
-            <div className="h-[520px] overflow-y-auto mt-1">
-                <div className="account_list rounded flex flex-wrap ">
+            <div className="mt-1 overflow-y-auto h-[520px]">
+                <div className="flex flex-wrap rounded account_list">
                     {accounts}
                 </div>
             </div>

@@ -94,54 +94,93 @@ export const accountsInitThunkCreator = () => {
         if (!getState().auth) {
             console.log("initAcc");
             dispatch(onAuthAction(true));
-            for (let i = 0; i < getState().accounts.length; i++) {
-                console.log(getState().accounts[i].authData.login);
-                if (getState().accounts[i].used && !getState().process[i].cookies) {
-                    try {
-                        const {
-                            community,
-                            steam_id,
-                            session_id,
-                            cookies
-                        } = await user.authSteam(getState().accounts[i].authData);
-                        const avatarUrl = await user.getUserAvatar(community, steam_id);
-                        dispatch(initAccountAction({community, steam_id, session_id, cookies, avatarUrl, i}));
-                        dispatch(startMarketPingPongTimerThunkCreator(i));
-                        dispatch(marketUpdateInventoryTimerThunkCreator(i));
-                        dispatch(setGetMarketStatusTimerThunkCreator(i));
-                        dispatch(setUpdateBalanceTimerThunkCreator(i));
-                        dispatch(getMarketBuyHistoryThunkCreator(i));
-                        dispatch(startSteamTradeAcceptWhenItemSoldTimerThunkCreator(i));
-                        dispatch(startSteamTradeAcceptTimerThunkCreator(i));
-                        dispatch(autoSellPurchasedItemsThunkCreator(i));
-                        dispatch(autoMonitoringStartTimerThunkCreator(i));
-                        dispatch(autoSetItemsStartTimerThunkCreator(i));
-                        dispatch(autoAutobuyStartTimerThunkCreator(i));
-                        dispatch(onErrorAction(i, null));
-                        dispatch(onLoadingAction(i, false));
-                    } catch (e) {
-                        dispatch(onErrorAction(i, e.message));
-                        const errorList = [
-                            "HTTP error 429",
-                            "CAPTCHA",
-                            "SteamGuardMobile",
-                            "getaddrinfo ENOTFOUND steamcommunity.com",
-                            "ESOCKETTIMEDOUT",
-                            "RateLimitExceeded"
-                        ]
-                        if (errorList.includes(e.message)) {
-                            i--;
-                            await new Promise(r => setTimeout(r, 60000));
-                            continue;
-                        }
+            const accounts = getState().accounts;
+
+            try {
+                for (let i = 0; i < accounts.length; i++) {
+                    const account = accounts[i];
+
+                    if (account.used && !getState().process[i].cookies) {
+                        await handleAccountInitialization(dispatch, getState, account, i, false);
+                        await new Promise(resolve => setTimeout(resolve, 45000)); //auth delay
                     }
-                    await new Promise(r => setTimeout(r, 30000)); //auth delay
                 }
+            } catch (error) {
+                console.error("Error during account initialization:", error);
+            } finally {
+                dispatch(onAuthAction(false));
             }
-            dispatch(onAuthAction(false));
+        }
+    };
+};
+
+export const accountsReAuthThunkCreator = (i) => async (dispatch, getState) => {
+
+    console.log("reauth");
+    dispatch(onAuthAction(true));
+    const accounts = getState().accounts;
+    try {
+        const account = accounts[i];
+        if (account.used) {
+            await handleAccountInitialization(dispatch, getState, account, i, true);
+        }
+    } catch (error) {
+        console.error("Error during account reauth:", error);
+    }
+
+};
+const handleAccountInitialization = async (dispatch, getState, account, index, reAuth) => {
+    try {
+        dispatch(onLoadingAction(index, true));
+
+        const {
+            community,
+            steam_id,
+            session_id,
+            cookies
+        } = await user.authSteam(account.authData);
+
+        const avatarUrl = await user.getUserAvatar(community, steam_id);
+
+        dispatch(initAccountAction({community, steam_id, session_id, cookies, avatarUrl, i: index}));
+
+        if(!reAuth){
+            [
+                startMarketPingPongTimerThunkCreator,
+                marketUpdateInventoryTimerThunkCreator,
+                setGetMarketStatusTimerThunkCreator,
+                setUpdateBalanceTimerThunkCreator,
+                getMarketBuyHistoryThunkCreator,
+                startSteamTradeAcceptWhenItemSoldTimerThunkCreator,
+                startSteamTradeAcceptTimerThunkCreator,
+                autoSellPurchasedItemsThunkCreator,
+                autoMonitoringStartTimerThunkCreator,
+                autoSetItemsStartTimerThunkCreator,
+                autoAutobuyStartTimerThunkCreator
+            ].forEach(timer => dispatch(timer(index)));
+        }
+
+        dispatch(onErrorAction(index, null));
+        dispatch(onLoadingAction(index, false));
+
+    } catch (error) {
+        dispatch(onErrorAction(index, error.message));
+
+        const errorList = [
+            "HTTP error 429",
+            "CAPTCHA",
+            "SteamGuardMobile",
+            "getaddrinfo ENOTFOUND steamcommunity.com",
+            "ESOCKETTIMEDOUT",
+            "RateLimitExceeded"
+        ];
+
+        if (errorList.includes(error.message)) {
+            await new Promise(resolve => setTimeout(resolve, 60000));
         }
     }
-}
+};
+
 
 export const startMarketPingPongTimerThunkCreator = (i) => {
     return async (dispatch, getState) => {
@@ -245,7 +284,7 @@ export const autoAutobuyStartTimerThunkCreator = (i) => {
                     dispatch(stopAutobuyAction(i));
                     await user.sleep(3000);
                     const balance = await user.getMarketBalance(getState().accounts[i].authData.marketApi)
-                    if(balance && balance >= Number(startLimit)){
+                    if (balance && balance >= Number(startLimit)) {
                         dispatch(startAutobuyTimerThunkCreator(i));
                     }
                 } catch (e) {
@@ -497,10 +536,10 @@ export const startAutobuyTimerThunkCreator = (i) => {
             const {browser, page} = await user.autobuyBrowserStart();
             dispatch(autobuyBrowserStartAction(i, browser));
             await user.autobuyAuth(getState().accounts[i].authData, page, loggingAutobuy);
-            if(getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTable){
+            if (getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTable) {
                 const minPercent = await user.maxPercentInTableForAutobuy(getState().accounts[i].funcSaves.autobuy.fields, page);
                 loggingAutobuy(`Мин. %: ${minPercent}`);
-                if(Number(minPercent) < Number(getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTableValue)){
+                if (Number(minPercent) < Number(getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTableValue)) {
                     dispatch(stopAutobuyAction(i));
                     loggingAutobuy(`Мин. % ниже ограничения.`);
                     return

@@ -39,7 +39,7 @@ const Monitoring = ({selected}) => {
     const items = process.items.map((item, i) => {
 
         return (
-            item.error ? <div className="text-center mt-40">{item.error}</div> :
+            item.error ? <div className="mt-40 text-center">{item.error}</div> :
                 <MonitoringItems item={item} selected={selected} disabled={process.funcAddress} index={i} key={i}/>
         );
     });
@@ -50,18 +50,18 @@ const Monitoring = ({selected}) => {
             <div className="flex">
 
                 <div className="w-[630px]">
-                    <div className="flex mt-3 px-4">
+                    <div className="mt-3 flex px-4">
                         <div className="w-96">Название предмета</div>
                         <div className="w-28 text-center">Мин. порог</div>
                         <div className="w-28 text-center">Макс. порог</div>
                     </div>
-                    <div className="mt-1 px-4 py-1.5  space-y-1 rounded-2xl border-blue-100 border-2 shadow-2xl ">
+                    <div className="mt-1 rounded-2xl border-2 border-blue-100 px-4 shadow-2xl py-1.5 space-y-1">
                         <ul className="overflow-y-auto h-[530px]">
                             {process.onLoading ?
                                 <Spinner className={"w-36 h-36 border-blue-600 m-auto mt-40 "}/> : items}
                         </ul>
                     </div>
-                    <div className="text-xs float-right space-y-px mt-1">
+                    <div className="float-right mt-1 text-xs space-y-px">
                         <Button onClick={() => dispatch(pasteMonitoringItemsValueAction(selected))}
                                 buttonStyle="w-24 h-6"
                                 disabled={process.funcAddress || process.onLoading}>Вставить</Button>
@@ -71,12 +71,12 @@ const Monitoring = ({selected}) => {
                     </div>
                 </div>
 
-                <div className="mt-10 w-52 ml-7 text-sm">
+                <div className="mt-10 ml-7 w-52 text-sm">
                     <Button buttonStyle={"w-52 h-9"} disabled={process.funcAddress || process.onLoading}
                             onClick={() => {
                                 dispatch(getMonitoringItemsThunkCreator(selected))
                             }}>Обновить выставленые предметы</Button>
-                    <div className="flex justify-between mt-2">
+                    <div className="mt-2 flex justify-between">
                         <Button buttonStyle={"w-16 h-9"} disabled={process.funcAddress || process.onLoading}
                                 onClick={() => {
                                     dispatch(startMonitoringTimerThunkCreator(selected))
@@ -93,10 +93,10 @@ const Monitoring = ({selected}) => {
                                           onChange={setCheckboxValue}
                                           disabled={process.funcAddress || process.onLoading}
                                           checked={data.autoMinLimit}/>
-                    <div className="mt-2 flex justify-start items-center space-x-2">
+                    <div className="mt-2 flex items-center justify-start space-x-2">
                         <div>-</div>
                         <input id="autoMinLimitValue"  onChange={setInputValue} value={data.autoMinLimitValue}
-                               className="w-12 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                               className="h-6 w-12 rounded-md border-2 border-gray-300 text-center text-sm active:border-orange-500 disabled:bg-gray-200"
                                type="number" disabled={!data.autoMinLimit || process.funcAddress || process.onLoading}/>
                         <div className="">
                             <fieldset className="space-x-2" id="group">
@@ -113,10 +113,10 @@ const Monitoring = ({selected}) => {
                                           onChange={setCheckboxValue}
                                           disabled={process.funcAddress || process.onLoading}
                                           checked={data.autoMaxLimit}/>
-                    <div className="mt-2 flex justify-start items-center space-x-2">
+                    <div className="mt-2 flex items-center justify-start space-x-2">
                         <div>+</div>
                         <input id="autoMaxLimitValue" onChange={setInputValue} value={data.autoMaxLimitValue}
-                               className="w-12 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                               className="h-6 w-12 rounded-md border-2 border-gray-300 text-center text-sm active:border-orange-500 disabled:bg-gray-200"
                                type="number" disabled={!data.autoMaxLimit || process.funcAddress || process.onLoading}/>
                         <div> RUB</div>
                     </div>

@@ -29,7 +29,7 @@ const BugReport = ({setBugReport}) => {
                 <Input value={title} onChange={e => setTitle(e.target.value)}  text={"Тема"} inputStyle={"w-96 text-left"} />
                 <div className="mt-2">
                     <div className="text-sm">Подробно опишите проблему</div>
-                    <textarea value={body} onChange={e => setBody(e.target.value)} className="w-96 h-36 rounded-lg bg-gray-100 border-blue-500 outline-orange-300 border-2 mt-1.5 p-1 resize-none "/>
+                    <textarea value={body} onChange={e => setBody(e.target.value)} className="h-36 w-96 resize-none rounded-lg border-2 border-blue-500 bg-gray-100 p-1 outline-orange-300 mt-1.5"/>
                 </div>
 
                 <div className="mt-3 flex justify-center">

@@ -134,16 +134,16 @@ const Autobuy = ({selected}) => {
             <Header>Autobuy</Header>
             <div className="flex">
 
-                <div className="w-[600px] mt-3">
-                    <div className="mt-1 px-4 py-1.5 space-y-1 rounded-2xl border-blue-100 border-2 shadow-2xl ">
+                <div className="mt-3 w-[600px]">
+                    <div className="mt-1 rounded-2xl border-2 border-blue-100 px-4 shadow-2xl py-1.5 space-y-1">
                         <ul ref={endListRef} className="overflow-y-auto h-[560px]">
                             {items}
                         </ul>
                     </div>
                 </div>
 
-                <div className="mt-3 w-52 ml-11 text-sm">
-                    <div className="flex justify-between mt-2">
+                <div className="mt-3 ml-11 w-52 text-sm">
+                    <div className="mt-2 flex justify-between">
                         <Button buttonStyle={"w-16 h-9"} disabled={process.browser} onClick={() => {
                             dispatch(startAutobuyTimerThunkCreator(selected))
                         }}>Старт</Button>
@@ -172,7 +172,7 @@ const Autobuy = ({selected}) => {
                     <div className="mt-2 flex justify-end space-x-4">
                         <div className={"text-sm"}>не ниже</div>
                         <input id="autoSetMaxPercentFromTableValue" onChange={setFieldValue} value={data.autoSetMaxPercentFromTableValue}
-                               className="w-16 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                               className="h-6 w-16 rounded-md border-2 border-gray-300 text-center text-sm active:border-orange-500 disabled:bg-gray-200"
                                type="number" disabled={process.browser || !data.autoSetMaxPercentFromTable}/>
                         <div className={"text-sm"}> %</div>
                     </div>
@@ -186,19 +186,19 @@ const Autobuy = ({selected}) => {
                     <div className="mt-2 flex justify-end space-x-4">
                         <div className={"text-sm"}>от</div>
                         <input id="autoAutobuyStartValue" onChange={setFieldValue} value={data.autoAutobuyStartValue}
-                               className="w-16 h-6 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                               className="h-6 w-16 rounded-md border-2 border-gray-300 text-center text-sm active:border-orange-500 disabled:bg-gray-200"
                                type="number" disabled={process.browser || !data.autoAutobuyStart}/>
                         <div className={"text-sm"}> RUB</div>
                     </div>
 
-                    <div className="flex items-center space-x-2 mt-4">
+                    <div className="mt-4 flex items-center space-x-2">
                         {checkbox.map((item, i) => (
                             <Checkbox key={i} text={item.text} id={item.id} onChange={setCheckboxValue}
                                       checked={item.checked} disabled={process.browser}/>
                         ))}
                     </div>
 
-                    <div className="flex flex-wrap justify-between mt-4">
+                    <div className="mt-4 flex flex-wrap justify-between">
                         {inputs.map((item, i) => (
                             <Input key={i} id={item.id} text={item.text} inputStyle={item.inputStyle}
                                    onChange={setFieldValue} value={item.value} type="number" disabled={process.browser}/>

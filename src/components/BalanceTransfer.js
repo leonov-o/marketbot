@@ -47,7 +47,7 @@ const BalanceTransfer = ({onBalanceTransfer}) => {
                 <div className="mt-3 ml-4">
                     <Input text={"Сумма"} inputStyle={"w-56 text-sm"} value={sum}
                            onChange={e => onSum(e.target.value)}/>
-                    <div className="flex justify-between items-end space-x-2">
+                    <div className="flex items-end justify-between space-x-2">
                         <Input text={"API-ключ получателя"} inputStyle={"w-56 text-sm"} value={apiRecipient}
                                onChange={e => onApiRecipient(e.target.value)}/>
                         <select defaultValue={'Выбор аккаунта'} onChange={onSelectApiRecipient}>
@@ -55,7 +55,7 @@ const BalanceTransfer = ({onBalanceTransfer}) => {
                             {data.map((item, i) => (<option key={i}>{item.authData.login}</option>))}
                         </select>
                     </div>
-                    <div className="flex justify-between items-end space-x-2">
+                    <div className="flex items-end justify-between space-x-2">
                         <Input text={"API-ключ отправителя"} inputStyle={"w-56 text-sm"} value={apiSender}
                                onChange={e => onApiSender(e.target.value)}/>
                         <select defaultValue={'Выбор аккаунта'} onChange={onSelectApiSender}>
@@ -65,8 +65,8 @@ const BalanceTransfer = ({onBalanceTransfer}) => {
                     </div>
                     <Input text={"Платежный пароль"} inputStyle={"w-56 text-sm"} value={payPass}
                            onChange={e => onPayPass(e.target.value)}/>
-                    {success ? <div className="w-28 text-blue-500 ">Успешно</div> : null}
-                    <div className="flex justify-center mt-3">
+                    {success ? <div className="w-28 text-blue-500">Успешно</div> : null}
+                    <div className="mt-3 flex justify-center">
                         <Button onClick={() => onSendMoney()} buttonStyle={"w-36"}>Отправить</Button>
                     </div>
                 </div>

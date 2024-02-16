@@ -41,9 +41,9 @@ const Modal = ({children, onClose}) => {
                 <div className="flex justify-start">
                     <div
                         onMouseDown={handleMouseDown}
-                        className="w-full z-40 cursor-move"
+                        className="z-40 w-full cursor-move"
                     ></div>
-                    <div className="btn float-right m-1" onClick={onClose}>
+                    <div className="float-right m-1 btn" onClick={onClose}>
                         <img draggable="false" src={modalCloseIcon} alt=""/>
                     </div>
                 </div>

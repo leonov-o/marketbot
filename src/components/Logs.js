@@ -23,7 +23,7 @@ const Logs = ({selected}) => {
     return (
         <div className="my-3 ml-4 w-48 logs">
             <div className="text-center">Логи</div>
-            <div className="px-3 py-1.5 space-y-1 rounded-2xl border-blue-100 border-2 shadow-2xl">
+            <div className="rounded-2xl border-2 border-blue-100 px-3 shadow-2xl py-1.5 space-y-1">
                 <ul ref={endListRef} className="h-44 overflow-y-auto">
                     {logs}
                 </ul>

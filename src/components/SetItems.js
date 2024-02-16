@@ -46,13 +46,13 @@ const SetItems = ({selected}) => {
 
     const items = process.items.map((item, i) => {
         return (
-            item.error ? <div key={i} className="text-center mt-40">{item.error}</div> :
+            item.error ? <div key={i} className="mt-40 text-center">{item.error}</div> :
             <li key={i}
-                className="flex justify-between items-center mt-0.5">
+                className="flex items-center justify-between mt-0.5">
                 <div className="w-80 text-xs">{item.name}</div>
-                <div className="w-20 text-xs text-center">{item.minPrice} RUB</div>
-                <div className="w-20 text-xs text-center">{marketBuyHistory[item.name]} RUB</div>
-                <input className="w-20 h-6 ml-4 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm" type="text" disabled={process.func} onChange={(e) => dispatch(changeSetItemFieldsAction(selected, i, "price", e.currentTarget.value))} value={item.price}/>
+                <div className="w-20 text-center text-xs">{item.minPrice} RUB</div>
+                <div className="w-20 text-center text-xs">{marketBuyHistory[item.name]} RUB</div>
+                <input className="ml-4 h-6 w-20 rounded-md border-2 border-gray-300 text-center text-sm active:border-orange-500 disabled:bg-gray-200" type="text" disabled={process.func} onChange={(e) => dispatch(changeSetItemFieldsAction(selected, i, "price", e.currentTarget.value))} value={item.price}/>
 
             </li>
         );
@@ -64,14 +64,14 @@ const SetItems = ({selected}) => {
             <div className="flex">
 
                 <div className="w-[630px]">
-                    <div className="flex mt-3 px-4">
+                    <div className="mt-3 flex px-4">
                         <div className="w-96">Название предмета</div>
                         <div className="w-28 text-center">Мин. цена</div>
                         <div className="w-28 text-center">Цена покупки</div>
                         <div className="w-28 text-center">Цена</div>
 
                     </div>
-                    <div className="mt-1 px-4 py-1.5  space-y-1 rounded-2xl border-blue-100 border-2 shadow-2xl ">
+                    <div className="mt-1 rounded-2xl border-2 border-blue-100 px-4 shadow-2xl py-1.5 space-y-1">
                         <ul className="overflow-y-auto h-[530px]">
                             {process.onLoading ?
                                 <Spinner className={"w-36 h-36 border-blue-600 m-auto mt-40 "}/> : items}
@@ -80,7 +80,7 @@ const SetItems = ({selected}) => {
 
                 </div>
 
-                <div className="mt-10 w-52 ml-7 text-sm">
+                <div className="mt-10 ml-7 w-52 text-sm">
 
                     <Button buttonStyle={"w-44 h-9 mx-auto"} disabled={process.onLoading || process.func}  onClick={() => dispatch(getSetItemsThunkCreator(selected))}>Обновить инвентарь</Button>
                     <Button buttonStyle={"w-44 h-9 mt-2 mx-auto"} disabled={process.onLoading || process.func} onClick={() => dispatch(setItemsThunkCreator(selected))}>Выставить</Button>

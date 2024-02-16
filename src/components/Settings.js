@@ -136,7 +136,7 @@ const Settings = () => {
     const items = data.map((item, i) => {
         return (
             <li key={i}
-                className="flex justify-between items-center border-b-2 rounded shadow-sm w-64 px-1.5 py-1 hover:bg-gray-200 cursor-default">
+                className="flex w-64 cursor-default items-center justify-between rounded border-b-2 py-1 shadow-sm px-1.5 hover:bg-gray-200">
                 <input type="checkbox" checked={item.used} onChange={(e) => setCheckboxValue(e, i)}/>
                 <div className="ml-3 w-40">{item.authData.login.length > 12
                     ? item.authData.login.substring(0, 12) + "..."
@@ -151,15 +151,15 @@ const Settings = () => {
         );
     })
     return (
-        <div className="settings transition-all">
-            <div className="text-center mt-3">
+        <div className="transition-all settings">
+            <div className="mt-3 text-center">
                 <Header>Настройки</Header>
             </div>
 
-            <div className="flex justify-center items-center mt-9 space-x-5">
-                <ul className="overflow-y-auto overflow-x-hidden h-96 rounded-xl border-2 border-blue-500 p-2 ">
+            <div className="mt-9 flex items-center justify-center space-x-5">
+                <ul className="h-96 overflow-y-auto overflow-x-hidden rounded-xl border-2 border-blue-500 p-2">
                     {items}
-                    <li className="btn w-64 px-1.5 py-1 flex justify-center">
+                    <li className="flex w-64 justify-center py-1 btn px-1.5">
                         {!(addAccount || editAccount) &&
                             <Button buttonStyle="w-1/2 h-7" onClick={onAdd}>Добавить аккаунт</Button>}
                     </li>

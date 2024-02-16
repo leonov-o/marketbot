@@ -20,11 +20,11 @@ const AboutProgram = ({onAboutProgram}) => {
                 <div className="text-center">
                     <Header>О программе</Header>
                 </div>
-                <div className="mt-5 text-justify text-md indent-5">
+                <div className="mt-5 text-justify indent-5 text-md">
                     Данная программа предназначена для упрощения и оптимизации вашего опыта торговли
                     предметами между сайтами Steam и Market.CSGO.
                 </div>
-                <div className="mt-2 text-justify text-md indent-5">
+                <div className="mt-2 text-justify indent-5 text-md">
                     Если вы активно участвуете в торговле предметами игры
                     Counter-Strike: Global Offensive, то бот поможет вам значительно сэкономить время и усилия, а также
                     повысить вашу эффективность в этом процессе.

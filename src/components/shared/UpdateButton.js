@@ -43,7 +43,7 @@ const UpdateButton = ({settings}) => {
 
 const UpdateCheck = () => {
     return (
-        <div className="update_btn flex justify-center space-x-1 items-center w-32 h-4 rounded bg-blue-500">
+        <div className="flex h-4 w-32 items-center justify-center rounded bg-blue-500 update_btn space-x-1">
             <div className="">
                 <Spinner className={"w-3 h-3 inline-block ml-1"}/>
             </div>
@@ -55,9 +55,9 @@ const UpdateCheck = () => {
 const UpdateDownload = ({percent}) => {
     const percentToWidth = String(Math.round(80/100 * percent));
     return (
-        <div className="update_btn flex justify-around space-x-1 items-center w-32 h-4 px-1 rounded bg-blue-500">
-            <div className="w-20 h-1 bg-blue-950 rounded">
-                <div className="h-1 bg-white rounded" style={{width: percentToWidth + "px"}}></div>
+        <div className="flex h-4 w-32 items-center justify-around rounded bg-blue-500 px-1 update_btn space-x-1">
+            <div className="h-1 w-20 rounded bg-blue-950">
+                <div className="h-1 rounded bg-white" style={{width: percentToWidth + "px"}}></div>
             </div>
             <div className="text-gray-300" >{percent.toFixed(0)}%</div>
         </div>
@@ -66,7 +66,7 @@ const UpdateDownload = ({percent}) => {
 
 const UpdateReady = ({settings}) => {
     return (
-        <div className="update_btn flex justify-center space-x-1 items-center w-32 h-4 rounded bg-green-600 hover:bg-green-700 transition-all duration-200">
+        <div className="flex h-4 w-32 items-center justify-center rounded bg-green-600 transition-all duration-200 update_btn space-x-1 hover:bg-green-700">
             <div onClick={() => window.ipcRenderer.send("lets-update", {accounts: settings})} className="text-gray-300" >Установить</div>
         </div>
     );

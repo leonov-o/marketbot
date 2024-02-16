@@ -27,11 +27,11 @@ const Calc = ({onCalc}) => {
         <Modal onClose={() => {
             onCalc(false)
         }}>
-            <div className="px-11 pb-6 w-80">
+            <div className="w-80 px-11 pb-6">
                 <div className="text-center">
                     <Header>Калькулятор выгоды</Header>
                 </div>
-                <div className="flex flex-wrap justify-center mt-2">
+                <div className="mt-2 flex flex-wrap justify-center">
                     <Input value={firstPrice} onChange={e => setFirstPrice(e.target.value)} text={"Цена 1"}
                            inputStyle={"w-56 h-8"}/>
                     <Input value={secondPrice} onChange={e => setSecondPrice(e.target.value)} text={"Цена 2"}
@@ -42,7 +42,7 @@ const Calc = ({onCalc}) => {
 
                 <div className="mt-3">
                     <div className="text-sm">Цена продажи с учетом комиссии: {withoutComm}</div>
-                    <div className="text-center text-blue-600 text-2xl mt-2">{result}x</div>
+                    <div className="mt-2 text-center text-2xl text-blue-600">{result}x</div>
                 </div>
             </div>
         </Modal>

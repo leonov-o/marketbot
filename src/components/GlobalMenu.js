@@ -58,13 +58,13 @@ const GlobalMenu = () => {
     const btnActive = (e) => {
         const btn = document.querySelectorAll(".globalBtn");
         for(let i = 0; i <btn.length; i++) {
-            btn[i].className="btn globalBtn flex justify-around items-center space-x-2 px-2 py-1.5 rounded hover:shadow-md hover:bg-gray-200 active:bg-blue-500 active:text-gray-300 active:shadow-xl transition-all duration-200 cursor-pointer";
+            btn[i].className="flex cursor-pointer items-center justify-around rounded px-2 transition-all duration-200 btn globalBtn space-x-2 py-1.5 hover:bg-gray-200 hover:shadow-md active:bg-blue-500 active:text-gray-300 active:shadow-xl";
         }
-        e.currentTarget.className = "btn globalBtn flex justify-around items-center space-x-2 px-2 py-1.5 rounded bg-blue-500 text-gray-300 shadow-xl transition-all duration-200"
+        e.currentTarget.className = "flex items-center justify-around rounded bg-blue-500 px-2 text-gray-300 shadow-xl transition-all duration-200 btn globalBtn space-x-2 py-1.5"
     }
 
     return (
-        <div className="globalMenu px-3  after:block after:h-0.5 after:bg-blue-500">
+        <div className="after:block after:bg-blue-500 px-3 globalMenu after:h-0.5">
             <div className="my-1 flex">
 
                 {balanceTransfer && <BalanceTransfer onBalanceTransfer={onBalanceTransfer}/>}

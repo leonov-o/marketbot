@@ -30,33 +30,33 @@ const Drag = () => {
     }
 
     return (
-        <div className='drag flex justify-between items-center h-5 pl-1 bg-gradient-to-r from-white via-blue-200 to-white'>
+        <div className='flex h-5 items-center justify-between bg-gradient-to-r from-white via-blue-200 to-white pl-1 drag'>
             {bugReport && <BugReport setBugReport={setBugReport}/>}
 
-            <div className="w-40 flex justify-start space-x-1 text-xs">
-                <div className=" ">
+            <div className="flex w-40 justify-start text-xs space-x-1">
+                <div className="">
                     v2.0.10
                 </div>
                 <UpdateButton settings={settings}/>
             </div>
 
             <div className="">
-                <div className="font-display text-zinc-500">Market<span className="text-blue-500">Bot</span></div>
+                <div className="text-zinc-500 font-display">Market<span className="text-blue-500">Bot</span></div>
             </div>
 
-            <div className="w-40 flex justify-end ">
+            <div className="flex w-40 justify-end">
                 <div
-                    className="btn w-5 h-5 mr-4 flex justify-center items-center hover:bg-gray-200 transition-all duration-200"
+                    className="mr-4 flex h-5 w-5 items-center justify-center transition-all duration-200 btn hover:bg-gray-200"
                     onClick={() => setBugReport(true)}>
                     <img src={bugReportIcon} alt="bugReport"/>
                 </div>
-                <div onClick={onMinimize} className="btn w-5 h-5 flex justify-center items-center hover:bg-gray-200 transition-all duration-200">
+                <div onClick={onMinimize} className="flex h-5 w-5 items-center justify-center transition-all duration-200 btn hover:bg-gray-200">
                     <img src={minimize} alt="minimize"/>
                 </div>
-                <div onClick={onMaximize} className="btn w-5 h-5 flex justify-center items-center hover:bg-gray-200 transition-all duration-200">
+                <div onClick={onMaximize} className="flex h-5 w-5 items-center justify-center transition-all duration-200 btn hover:bg-gray-200">
                     <img src={maximize} alt="maximize"/>
                 </div>
-                <div onClick={onClose} className="btn w-5 h-5 flex justify-center items-center hover:bg-red-400 transition-all duration-200">
+                <div onClick={onClose} className="flex h-5 w-5 items-center justify-center transition-all duration-200 btn hover:bg-red-400">
                     <img src={close} alt="close"/>
                 </div>
             </div>

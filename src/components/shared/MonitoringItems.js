@@ -15,11 +15,11 @@ const MonitoringItems = ({item, selected, index, disabled}) => {
             <div className="w-80 text-xs">{item.name}</div>
             <input onFocus={() => onVisibleInfo(true)} onBlur={() => onVisibleInfo(false)}
                    onChange={(e) => dispatch(changeMonitoringItemFieldsAction(selected, index, "minLimit", e.currentTarget.value))}
-                   className="w-24 h-6 ml-14 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                   className="ml-14 h-6 w-24 rounded-md border-2 border-gray-300 text-center text-sm active:border-orange-500 disabled:bg-gray-200"
                    value={item.minLimit} disabled={disabled} type="text"/>
             <input onFocus={() => onVisibleInfo(true)} onBlur={() => onVisibleInfo(false)}
                    onChange={(e) => dispatch(changeMonitoringItemFieldsAction(selected, index, "maxLimit", e.currentTarget.value))}
-                   className="w-24 h-6 ml-4 rounded-md border-gray-300 active:border-orange-500 disabled:bg-gray-200 border-2 text-center text-sm"
+                   className="ml-4 h-6 w-24 rounded-md border-2 border-gray-300 text-center text-sm active:border-orange-500 disabled:bg-gray-200"
                    value={item.maxLimit} disabled={disabled} type="text"/>
             {visibleInfo ? <ItemInfo item={item} selected={selected} buyPrice={buyPrice}/> : null}
         </li>
@@ -28,12 +28,12 @@ const MonitoringItems = ({item, selected, index, disabled}) => {
 
 const ItemInfo = ({item, buyPrice}) => {
     return (
-        <div className="absolute rounded-md top-5 bg-white border-blue-100 border-2 w-[350px] flex z-10">
-            <div className="w-24 p-2 bg-gray-200 flex align-middle">
-                <img className="w-full h-full"
+        <div className="absolute top-5 z-10 flex rounded-md border-2 border-blue-100 bg-white w-[350px]">
+            <div className="flex w-24 bg-gray-200 p-2 align-middle">
+                <img className="h-full w-full"
                      src={"https://community.akamai.steamstatic.com/economy/image/" + item.img + "/360fx360f"} alt=""/>
             </div>
-            <div className="text-xs p-5 pl-2">
+            <div className="p-5 pl-2 text-xs">
                 <div className="">Моя цена: {item.price} RUB</div>
                 <div className="">Минимальная цена: {item.minPrice} RUB</div>
                 <div className="">Цена покупки: {buyPrice} RUB</div>

@@ -6,8 +6,8 @@ const ErrorCircle = ({error}) => {
     const [visible, onVisible] = useState(false);
     return (
         <div className="relative">
-            {visible && <div className="w-40 p-2 text-red-400 bg-white shadow-xl rounded-lg absolute top-6 right-0 z-40">
-                <div className=" text-sm shadow-md p-1">
+            {visible && <div className="absolute top-6 right-0 z-40 w-40 rounded-lg bg-white p-2 text-red-400 shadow-xl">
+                <div className="p-1 text-sm shadow-md">
                     {error.length > 240
                     ? error.substring(0, 240) + "..."
                     : error}
@@ -15,7 +15,7 @@ const ErrorCircle = ({error}) => {
             </div>}
 
             <img src={errorImage} onMouseEnter={() => onVisible(true)} onMouseLeave={() => onVisible(false)}
-                 className='shadow-2xl cursor-pointer' alt=""/>
+                 className='cursor-pointer shadow-2xl' alt=""/>
         </div>
     );
 };

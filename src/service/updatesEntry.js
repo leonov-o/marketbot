@@ -1,5 +1,13 @@
 const updatesEntry = [
     {
+        version: "v2.0.13",
+        body: `
+Исправлены ошибки:
+• Авторизации на Steam.
+• Поддержки онлайна на market.csgo.com.
+        `
+    },
+    {
         version: "v2.0.10",
         body: `
 Изменения:

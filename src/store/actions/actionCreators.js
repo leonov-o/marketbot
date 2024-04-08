@@ -187,7 +187,7 @@ export const startMarketPingPongTimerThunkCreator = (i) => {
         const logging = (log) => dispatch(onLogsAddAction(i, log));
         let timerId = setTimeout(async function tick() {
             try {
-                const online = await user.marketPingPong(getState().accounts[i].authData.marketApi);
+                const online = await user.marketPingPong(getState().accounts[i].authData.marketApi, getState().process[i].session_id);
                 if (online)
                     logging("Поддержание онлайна: да")
                 else

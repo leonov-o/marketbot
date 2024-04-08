@@ -2,7 +2,6 @@ const SteamCommunity = window.require("steamcommunity");
 // const {LoginSession, EAuthTokenPlatformType} = window.require("steam-session");
 
 
-
 const SteamTotp = window.require("steam-totp");
 const cheerio = window.require("cheerio");
 const fetch = window.require("node-fetch");
@@ -54,11 +53,14 @@ class User {
             const community = new SteamCommunity();
             community.login(details, (err, cookies, sessionID) => {
                 if (!err) {
+                    console.log("AUTH Data")
                     console.log(sessionID)
-                    console.log(cookies)
-                        // .split("steamLoginSecure=")[1].split("%7C%")[0];
-                    steam_id =  (sessionID.find((el) => el.startsWith("steamLoginSecure="))).split("steamLoginSecure=")[1].split("%7C%")[0];
-                    session_id = sessionID;
+                    steam_id = (sessionID.findLast((el) => el.startsWith("steamLoginSecure="))).split("steamLoginSecure=")[1].split("%7C%")[0];
+                    session_id = [
+                        sessionID.findLast((el) => el.startsWith("steamCountry=") && el.includes("Domain=steamcommunity.com")),
+                        sessionID.findLast((el) => el.startsWith("steamLoginSecure=") && el.includes("Domain=steamcommunity.com")),
+                        sessionID.findLast((el) => el.startsWith("sessionid=") && el.includes("Domain=steamcommunity.com"))
+                    ];
                     resolve({
                         community,
                         steam_id,
@@ -94,10 +96,31 @@ class User {
     //     console.log(cookie)
     // }
 
-    async marketPingPong(marketApi) {
-        const url = "https://market.csgo.com/api/PingPong/?key=" + marketApi;
+
+    async _getSteamWebApiToken(session_id) {
+        const url = "https://steamcommunity.com/pointssummary/ajaxgetasyncconfig";
+        let headers = {
+            Cookie: session_id.join(";")
+        }
+        const res = await fetch(url, {headers});
+
+        const json = await res.json();
+        console.log("webapi_token")
+        console.log(json)
+        return json["data"]["webapi_token"];
+    }
+
+    async marketPingPong(marketApi, session_id) {
+        const url = "https://market.csgo.com/api/v2/ping-new?key=" + marketApi;
         for (let attempt = 0; attempt < 3; attempt++) {
-            const res = await fetch(url);
+            const access_token = await this._getSteamWebApiToken(session_id);
+            const res = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({access_token})
+            });
             if (!res.ok) {
                 await this.sleep(2000);
                 continue;
@@ -676,7 +699,7 @@ class User {
         let executablePath = puppeteer.executablePath().replace("app.asar", "app.asar.unpacked") //для публикации
         let browser = await puppeteer.launch({
             executablePath: executablePath,
-            headless: false,
+            headless: true,
             args: ['--start-fullscreen', '--disable-web-security']
         });
         let page = await browser.newPage();

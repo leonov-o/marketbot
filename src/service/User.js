@@ -707,43 +707,22 @@ class User {
     }
 
 
-    async autobuyAuth(authData, page, loggingAutobuy) {
-        // const headers = {
-        //     ...this.defaultHeaders,
-        //     'Cookie': session_id.join(";")
-        // }
-        // await page.setExtraHTTPHeaders(headers);
-        // await page.goto('https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Ftable.altskins.com%2Flogin%2Fsteam&openid.realm=http%3A%2F%2Ftable.altskins.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select'); //переходим по ссылке для входа
-
-        // await page.waitForTimeout(1500);
-        // await page.waitForSelector('#imageLogin'); //ждем кнопку входа в Стиме
-        // await page.waitForTimeout(1500);
-        // await page.setExtraHTTPHeaders(headers);
-        // await page.click('#imageLogin'); //кликаем на нее
-        // await page.waitForTimeout(6000);
-        // await page.waitForSelector('img.header-avatar');
-        // loggingAutobuy("Успешно.");
-
-        const {login, password, shared_secret} = authData;
-        loggingAutobuy("Авторизация Steam...");
-        await page.goto('https://steamcommunity.com/login/home'); //переходим по ссылке для авторизации
-        await page.waitForSelector("._3Tsg92fl5YHs5NNgpidiWj"); //ждем пока загрузится форма для вписывания логина/пароля
-        await page.waitFor(1000); //просто ждем 1 секунду
-        await page.click('._2KXGKToxF6BG65rXNZ-mJX:first-child input'); //кликаем на поле, куда нужно вписывать логин
-        await page.type("._2KXGKToxF6BG65rXNZ-mJX:first-child input", login); //вписываем сам логин
-        await page.click('._2KXGKToxF6BG65rXNZ-mJX:nth-child(2) input'); //кликаем на поле, куда нужно вписывать пароль
-        await page.type("._2KXGKToxF6BG65rXNZ-mJX:nth-child(2) input", password); //вписываем сам пароль
-        await page.waitForTimeout(1000); //ждем 1 секунду
-        await page.click('._2QgFEj17t677s3x299PNJQ'); //кликаем на кнопку "войти"
-        await page.waitForSelector("._3PDBFJ_verUpV38hX7qRqL"); //ждем пока прогрузится окно для ввода гуард кода
-        await page.focus("._3PDBFJ_verUpV38hX7qRqL > input:nth-child(1)");
-        await page.waitForTimeout(2000); //ждем 1 секунду
-        await page.keyboard.type(this.generateAuthCode(shared_secret));
-        await page.waitForTimeout(6000);
-        await page.waitForSelector('#global_actions > a > img');
-        loggingAutobuy("Успешно.");
+    async autobuyAuth(session_id, page, loggingAutobuy) {
+        console.log(session_id)
+        const cookie = [
+            {
+                name: "steamLoginSecure",
+                value: session_id.find(part => part.includes("steamLoginSecure=")).split(";")[0].replace("steamLoginSecure=", ""),
+                domain: ".steamcommunity.com",
+                path: "/",
+                httpOnly: true,
+                secure: true
+            }
+        ];
+        await page.setCookie(...cookie);
         loggingAutobuy("Авторизация Altskins.com...");
-        await page.goto('https://table.altskins.com/login/steam'); //переходим по ссылке для входа
+        await page.goto('https://steamcommunity.com/openid/login?openid.ns=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0&openid.mode=checkid_setup&openid.return_to=http%3A%2F%2Ftable.altskins.com%2Flogin%2Fsteam&openid.realm=http%3A%2F%2Ftable.altskins.com&openid.ns.sreg=http%3A%2F%2Fopenid.net%2Fextensions%2Fsreg%2F1.1&openid.claimed_id=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select&openid.identity=http%3A%2F%2Fspecs.openid.net%2Fauth%2F2.0%2Fidentifier_select'); //переходим по ссылке для входа
+
         await page.waitForTimeout(1500);
         await page.waitForSelector('#imageLogin'); //ждем кнопку входа в Стиме
         await page.waitForTimeout(1500);
@@ -751,6 +730,35 @@ class User {
         await page.waitForTimeout(6000);
         await page.waitForSelector('img.header-avatar');
         loggingAutobuy("Успешно.");
+
+        // const {login, password, shared_secret} = authData;
+        // loggingAutobuy("Авторизация Steam...");
+        // await page.goto('https://steamcommunity.com/login/home'); //переходим по ссылке для авторизации
+        // await page.waitForSelector("._2v60tM463fW0V7GDe92E5f"); //ждем пока загрузится форма для вписывания логина/пароля
+        // await page.waitFor(1000); //просто ждем 1 секунду
+        // await page.click("._3BkiHun-mminuTO-Y-zXke:nth-child(1) input"); //кликаем на поле, куда нужно вписывать логин
+        // await page.type("._3BkiHun-mminuTO-Y-zXke:nth-child(1) input", login); //вписываем сам логин
+        // await page.waitForTimeout(500); //ждем
+        // await page.click('._3BkiHun-mminuTO-Y-zXke:nth-child(2) input'); //кликаем на поле, куда нужно вписывать пароль
+        // await page.type("._3BkiHun-mminuTO-Y-zXke:nth-child(2) input", password); //вписываем сам пароль
+        // await page.waitForTimeout(1000); //ждем 1 секунду
+        // await page.click('.DjSvCZoKKfoNSmarsEcTS'); //кликаем на кнопку "войти"
+        // await page.waitForSelector("._1gzkmmy_XA39rp9MtxJfZJ"); //ждем пока прогрузится окно для ввода гуард кода
+        // await page.focus("._1gzkmmy_XA39rp9MtxJfZJ > input:nth-child(1)");
+        // await page.waitForTimeout(2000); //ждем 2 секунду
+        // await page.keyboard.type(this.generateAuthCode(shared_secret));
+        // await page.waitForTimeout(6000);
+        // await page.waitForSelector('#global_actions > a > img');
+        // loggingAutobuy("Успешно.");
+        // loggingAutobuy("Авторизация Altskins.com...");
+        // await page.goto('https://table.altskins.com/login/steam'); //переходим по ссылке для входа
+        // await page.waitForTimeout(1500);
+        // await page.waitForSelector('#imageLogin'); //ждем кнопку входа в Стиме
+        // await page.waitForTimeout(1500);
+        // await page.click('#imageLogin'); //кликаем на нее
+        // await page.waitForTimeout(6000);
+        // await page.waitForSelector('img.header-avatar');
+        // loggingAutobuy("Успешно.");
     }
 
     async maxPercentInTableForAutobuy(settings, page) {

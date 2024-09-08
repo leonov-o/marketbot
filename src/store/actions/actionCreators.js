@@ -535,7 +535,7 @@ export const startAutobuyTimerThunkCreator = (i) => {
         try {
             const {browser, page} = await user.autobuyBrowserStart();
             dispatch(autobuyBrowserStartAction(i, browser));
-            await user.autobuyAuth(getState().accounts[i].authData, page, loggingAutobuy);
+            await user.autobuyAuth(getState().process[i].session_id, page, loggingAutobuy);
             if (getState().accounts[i].funcSaves.autobuy.fields.autoSetMaxPercentFromTable) {
                 const minPercent = await user.maxPercentInTableForAutobuy(getState().accounts[i].funcSaves.autobuy.fields, page);
                 loggingAutobuy(`Мин. %: ${minPercent}`);

@@ -433,7 +433,7 @@ class User {
                         .replace("(", "")
                         .replace(")", "")
                         .replace(",", ".")
-                        .replace("pуб.", "")
+                        .replace("руб.", "")
                         .trim());
                     sum += price;
                 }

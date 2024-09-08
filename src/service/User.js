@@ -382,10 +382,10 @@ class User {
             const json = await res.json();
 
             if (json["lowest_price"]) {
-                let price = Number(json["lowest_price"].replace(" pуб.", " ").replace(",", "."));
+                let price = Number(json["lowest_price"].replace(" руб.", "").replace(",", "."));
                 return Number(price.toFixed(2));
             } else if (json["median_price"]) {
-                let price = Number(json["median_price"].replace(" pуб.", " ").replace(",", "."));
+                let price = Number(json["median_price"].replace(" руб.", "").replace(",", "."));
                 return Number(price.toFixed(2));
             } else {
                 await this.sleep(7000);
